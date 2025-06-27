@@ -1,0 +1,47 @@
+{
+  "format": "custom",
+  "id": "site_settings",
+  "label": "site_settings",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "artist_name": {
+        "type": "Text",
+        "config": {
+          "label": "artist_name",
+          "placeholder": ""
+        }
+      },
+      "social_links": {
+        "type": "Group",
+        "config": {
+          "label": "social_links",
+          "repeat": true,
+          "fields": {}
+        }
+      },
+      "platform": {
+        "type": "Text",
+        "config": {
+          "label": "platform",
+          "placeholder": ""
+        }
+      },
+      "url": {
+        "type": "Text",
+        "config": {
+          "label": "url",
+          "placeholder": ""
+        }
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {}
+        }
+      }
+    }
+  }
+}

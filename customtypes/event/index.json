@@ -1,0 +1,48 @@
+{
+  "format": "custom",
+  "id": "event",
+  "label": "event",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "date": {
+        "type": "Date",
+        "config": {
+          "label": "date",
+          "placeholder": ""
+        }
+      },
+      "venue": {
+        "type": "Text",
+        "config": {
+          "label": "venue",
+          "placeholder": ""
+        }
+      },
+      "location": {
+        "type": "Text",
+        "config": {
+          "label": "location",
+          "placeholder": ""
+        }
+      },
+      "ticket_link": {
+        "type": "Text",
+        "config": {
+          "label": "ticket_link",
+          "placeholder": ""
+        }
+      },
+      "description": {
+        "type": "StructuredText",
+        "config": {
+          "label": "description",
+          "placeholder": "",
+          "allowTargetBlank": true,
+          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+        }
+      }
+    }
+  }
+}

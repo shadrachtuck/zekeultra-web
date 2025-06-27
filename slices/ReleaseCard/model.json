@@ -1,0 +1,71 @@
+{
+  "id": "release_card",
+  "type": "SharedSlice",
+  "name": "ReleaseCard",
+  "description": "ReleaseCard",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "Text",
+          "config": {
+            "label": "Title",
+            "placeholder": "Release title",
+            "allowTargetBlank": true,
+            "single": "text,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "cover_image": {
+          "type": "Image",
+          "config": {
+            "label": "Cover Image",
+            "constraint": {},
+            "thumbnails": []
+          }
+        },
+        "release_date": {
+          "type": "Date",
+          "config": {
+            "label": "Release Date",
+            "placeholder": "Select release date"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Description",
+            "placeholder": "Release description",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        }
+      },
+      "items": {
+        "platform_name": {
+          "type": "Text",
+          "config": {
+            "label": "Platform Name",
+            "placeholder": "e.g., Spotify, Apple Music"
+          }
+        },
+        "url": {
+          "type": "Link",
+          "config": {
+            "label": "URL",
+            "placeholder": "Link to platform",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": false
+          }
+        }
+      }
+    }
+  ]
+} 

@@ -1,0 +1,112 @@
+{
+  "format": "custom",
+  "id": "about_page",
+  "json": {
+    "Main": {
+      "page_title": {
+        "type": "Text",
+        "config": {
+          "label": "Page Title",
+          "placeholder": "About"
+        }
+      },
+      "hero_image": {
+        "type": "Image",
+        "config": {
+          "label": "Hero Image",
+          "constraint": {},
+          "thumbnails": []
+        }
+      },
+      "artist_name": {
+        "type": "Text",
+        "config": {
+          "label": "Artist Name",
+          "placeholder": "Artist name"
+        }
+      },
+      "bio": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Bio",
+          "placeholder": "Artist biography",
+          "allowTargetBlank": true,
+          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+        }
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "media_gallery": {
+              "type": "SharedSlice",
+              "fieldset": "Media Gallery",
+              "description": "Display a media gallery",
+              "icon": "photo_library",
+              "display": "list",
+              "non-repeat": {
+                "gallery_title": {
+                  "type": "Text",
+                  "config": {
+                    "label": "Gallery Title"
+                  }
+                }
+              },
+              "repeat": {
+                "title": {
+                  "type": "Text",
+                  "config": {
+                    "label": "Title"
+                  }
+                },
+                "media_type": {
+                  "type": "Select",
+                  "config": {
+                    "label": "Media Type",
+                    "options": [
+                      {
+                        "value": "image",
+                        "label": "Image"
+                      },
+                      {
+                        "value": "video",
+                        "label": "Video"
+                      },
+                      {
+                        "value": "embed",
+                        "label": "Embed"
+                      }
+                    ]
+                  }
+                },
+                "image": {
+                  "type": "Image",
+                  "config": {
+                    "label": "Image"
+                  }
+                },
+                "video_url": {
+                  "type": "Link",
+                  "config": {
+                    "label": "Video URL"
+                  }
+                },
+                "embed_code": {
+                  "type": "StructuredText",
+                  "config": {
+                    "label": "Embed Code",
+                    "multi": "preformatted"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "label": "about_page",
+  "repeatable": false,
+  "status": true
+}

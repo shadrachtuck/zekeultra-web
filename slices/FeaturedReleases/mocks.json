@@ -1,0 +1,107 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"section_description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Laborum enim labore aliqua qui do consequat. Velit tempor consequat sunt sunt pariatur."
+						}
+					}
+				]
+			},
+			"releases": {
+				"__TYPE__": "FieldContent",
+				"value": "effect",
+				"type": "Text"
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": [
+					[
+						"title",
+						{
+							"__TYPE__": "FieldContent",
+							"value": "neighbor",
+							"type": "Text"
+						}
+					],
+					[
+						"cover_image",
+						{
+							"origin": {
+								"id": "main",
+								"url": "https://images.unsplash.com/photo-1591012911207-0dbac31f37da",
+								"width": 4000,
+								"height": 4000
+							},
+							"url": "https://images.unsplash.com/photo-1591012911207-0dbac31f37da",
+							"width": 4000,
+							"height": 4000,
+							"edit": {
+								"zoom": 1,
+								"crop": {
+									"x": 0,
+									"y": 0
+								},
+								"background": "transparent"
+							},
+							"alt": "light",
+							"credits": null,
+							"__TYPE__": "ImageContent",
+							"thumbnails": {}
+						}
+					],
+					[
+						"release_date",
+						{
+							"__TYPE__": "FieldContent",
+							"type": "Date",
+							"value": "2015-02-08"
+						}
+					],
+					[
+						"description",
+						{
+							"__TYPE__": "StructuredTextContent",
+							"value": [
+								{
+									"type": "paragraph",
+									"content": {
+										"text": "Sunt aliquip magna cupidatat occaecat commodo pariatur esse est ipsum pariatur adipisicing id ipsum ipsum non. Occaecat nisi deserunt nostrud adipisicing aliqua magna proident."
+									}
+								}
+							]
+						}
+					],
+					[
+						"platform_name",
+						{
+							"__TYPE__": "FieldContent",
+							"value": "ourselves",
+							"type": "Text"
+						}
+					],
+					[
+						"platform_url",
+						{
+							"key": "a6cbaabe-95f5-4c1a-bc54-9710df7c8740",
+							"__TYPE__": "LinkContent",
+							"value": {
+								"__TYPE__": "ExternalLink",
+								"url": "http://google.com",
+								"text": "amount"
+							}
+						}
+					]
+				]
+			}
+		]
+	}
+]

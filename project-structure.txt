@@ -1,0 +1,30 @@
+zekeultra-web/
+├── app/
+│   ├── page.js                 # Homepage
+│   ├── about/
+│   │   └── page.js             # About page
+│   ├── music/
+│   │   ├── page.js             # Music/releases listing
+│   │   └── [slug]/
+│   │       └── page.js         # Single release page
+│   ├── tour/
+│   │   └── page.js             # Tour/events page
+│   ├── media/
+│   │   └── page.js             # Media page
+│   └── contact/
+│       └── page.js             # Contact page
+├── components/
+│   ├── layout/
+│   │   ├── Header.js           # Site header with navigation
+│   │   ├── Footer.js           # Site footer
+│   │   └── Layout.js           # Main layout wrapper
+│   ├── ui/
+│   │   ├── ReleaseCard.js      # Card component for releases
+│   │   ├── EventItem.js        # Component for event listings
+│   │   └── MediaGallery.js     # Gallery component
+│   └── slices/                 # Prismic slice components
+├── lib/
+│   └── prismic.js              # Prismic client configuration
+├── styles/
+│   └── globals.css             # Global styles
+└── slicemachine/               # Prismic Slice Machine config

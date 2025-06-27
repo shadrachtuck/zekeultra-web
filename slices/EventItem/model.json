@@ -1,0 +1,60 @@
+{
+  "id": "event_item",
+  "type": "SharedSlice",
+  "name": "EventItem",
+  "description": "EventItem",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "date": {
+          "type": "Date",
+          "config": {
+            "label": "Event Date",
+            "placeholder": "Select event date"
+          }
+        },
+        "venue": {
+          "type": "Text",
+          "config": {
+            "label": "Venue",
+            "placeholder": "Venue name"
+          }
+        },
+        "location": {
+          "type": "Text",
+          "config": {
+            "label": "Location",
+            "placeholder": "City, State/Country"
+          }
+        },
+        "ticket_link": {
+          "type": "Link",
+          "config": {
+            "label": "Ticket Link",
+            "placeholder": "Link to tickets",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": false
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Description",
+            "placeholder": "Event description",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+} 

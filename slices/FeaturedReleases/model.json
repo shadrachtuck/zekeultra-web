@@ -1,0 +1,85 @@
+{
+  "id": "featured_releases",
+  "type": "SharedSlice",
+  "name": "FeaturedReleases",
+  "description": "FeaturedReleases",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "releases": {
+          "type": "Text",
+          "config": {
+            "label": "Releases",
+            "placeholder": "Featured Releases"
+          }
+        },
+        "section_description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Section Description",
+            "placeholder": "Description of the releases section",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        }
+      },
+      "items": {
+        "title": {
+          "type": "Text",
+          "config": {
+            "label": "Title",
+            "placeholder": "Release title"
+          }
+        },
+        "cover_image": {
+          "type": "Image",
+          "config": {
+            "label": "Cover Image",
+            "constraint": {},
+            "thumbnails": []
+          }
+        },
+        "release_date": {
+          "type": "Date",
+          "config": {
+            "label": "Release Date",
+            "placeholder": "Select release date"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Description",
+            "placeholder": "Release description",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "platform_name": {
+          "type": "Text",
+          "config": {
+            "label": "Platform Name",
+            "placeholder": "e.g., Spotify, Apple Music"
+          }
+        },
+        "platform_url": {
+          "type": "Link",
+          "config": {
+            "label": "Platform URL",
+            "placeholder": "Link to platform",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": false
+          }
+        }
+      }
+    }
+  ]
+}

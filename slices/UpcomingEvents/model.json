@@ -1,0 +1,95 @@
+{
+  "id": "upcoming_events",
+  "type": "SharedSlice",
+  "name": "UpcomingEvents",
+  "description": "UpcomingEvents",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "section_title": {
+          "type": "Text",
+          "config": {
+            "label": "Section Title",
+            "placeholder": "Upcoming Events"
+          }
+        },
+        "section_description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Section Description",
+            "placeholder": "Description of upcoming events",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        },
+        "view_all_text": {
+          "type": "Text",
+          "config": {
+            "label": "View All Text",
+            "placeholder": "View All Events"
+          }
+        },
+        "view_all_link": {
+          "type": "Link",
+          "config": {
+            "label": "View All Link",
+            "placeholder": "Link to all events page",
+            "select": null,
+            "allowTargetBlank": false,
+            "allowText": true,
+            "repeat": false
+          }
+        }
+      },
+      "items": {
+        "date": {
+          "type": "Date",
+          "config": {
+            "label": "Event Date",
+            "placeholder": "Select event date"
+          }
+        },
+        "venue": {
+          "type": "Text",
+          "config": {
+            "label": "Venue",
+            "placeholder": "Venue name"
+          }
+        },
+        "location": {
+          "type": "Text",
+          "config": {
+            "label": "Location",
+            "placeholder": "City, State/Country"
+          }
+        },
+        "ticket_link": {
+          "type": "Link",
+          "config": {
+            "label": "Ticket Link",
+            "placeholder": "Link to tickets",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": false
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Description",
+            "placeholder": "Event description",
+            "allowTargetBlank": true,
+            "multi": "paragraph,strong,em,hyperlink"
+          }
+        }
+      }
+    }
+  ]
+} 

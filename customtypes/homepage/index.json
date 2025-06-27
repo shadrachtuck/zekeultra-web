@@ -1,0 +1,51 @@
+{
+  "format": "page",
+  "id": "homepage",
+  "label": "homepage",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "hero_image": {
+        "type": "Image",
+        "config": {
+          "label": "hero_image",
+          "constraint": {},
+          "thumbnails": []
+        }
+      },
+      "featured_text": {
+        "type": "StructuredText",
+        "config": {
+          "label": "featured_text",
+          "placeholder": "",
+          "allowTargetBlank": true,
+          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+        }
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "hero_section": {
+              "type": "SharedSlice"
+            },
+            "featured_releases": {
+              "type": "SharedSlice"
+            },
+            "upcoming_events": {
+              "type": "SharedSlice"
+            },
+            "release_card": {
+              "type": "SharedSlice"
+            },
+            "event_item": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    }
+  }
+}
