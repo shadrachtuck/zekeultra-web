@@ -13,6 +13,13 @@
           "placeholder": ""
         }
       },
+      "contact_email": {
+        "type": "Text",
+        "config": {
+          "label": "contact_email",
+          "placeholder": "Email address to receive contact form submissions"
+        }
+      },
       "social_links": {
         "type": "Group",
         "config": {
@@ -32,6 +39,57 @@
         "type": "Text",
         "config": {
           "label": "url",
+          "placeholder": ""
+        }
+      },
+      "enable_bandsintown": {
+        "type": "Boolean",
+        "config": {
+          "label": "enable_bandsintown",
+          "placeholder_false": "false",
+          "placeholder_true": "true",
+          "default_value": true
+        }
+      },
+      "bandsintown_api_id": {
+        "type": "Text",
+        "config": {
+          "label": "bandsintown_api_id",
+          "placeholder": ""
+        }
+      },
+      "bandsintown_artist_name": {
+        "type": "Text",
+        "config": {
+          "label": "bandsintown_artist_name",
+          "placeholder": ""
+        }
+      },
+      "stripe_public_api_key": {
+        "type": "Text",
+        "config": {
+          "label": "stripe_public_api_key",
+          "placeholder": ""
+        }
+      },
+      "stripe_private_api_key": {
+        "type": "Text",
+        "config": {
+          "label": "stripe_private_api_key",
+          "placeholder": ""
+        }
+      },
+      "resend_api_key": {
+        "type": "Text",
+        "config": {
+          "label": "resend_api_key",
+          "placeholder": ""
+        }
+      },
+      "background_video_url": {
+        "type": "Text",
+        "config": {
+          "label": "background_video_url",
           "placeholder": ""
         }
       },

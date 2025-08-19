@@ -1,0 +1,35 @@
+{
+  "id": "instagram_gallery",
+  "type": "SharedSlice",
+  "name": "InstagramGallery",
+  "description": "A gallery grid of Instagram posts.",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "",
+      "version": "1.0",
+      "description": "Default",
+      "primary": {
+        "instagram_username": {
+          "type": "Text",
+          "config": {
+            "label": "Instagram Username",
+            "placeholder": "e.g. zekeultra"
+          }
+        },
+        "embed_code": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Instagram Gallery Embed Code",
+            "placeholder": "Paste your Instagram widget/embed code here.",
+            "allowTargetBlank": true,
+            "multi": "embed"
+          }
+        }
+      },
+      "items": {},
+      "imageUrl": "https://images.prismic.io/slice-machine/621a5ec4-0387-4bc5-9860-2dd46cbc07cd_default_ss.png?auto=compress,format"
+    }
+  ]
+}

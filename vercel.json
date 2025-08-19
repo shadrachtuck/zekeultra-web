@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "env": {
+    "NEXT_PUBLIC_PRISMIC_ENDPOINT": "@prismic-endpoint",
+    "NEXT_PUBLIC_PRISMIC_ACCESS_TOKEN": "@prismic-access-token",
+    "STRIPE_SECRET_KEY": "@stripe-secret-key",
+    "RESEND_API_KEY": "@resend-api-key"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_PRISMIC_ENDPOINT": "@prismic-endpoint",
+      "NEXT_PUBLIC_PRISMIC_ACCESS_TOKEN": "@prismic-access-token"
+    }
+  },
+  "functions": {
+    "app/api/**/*.js": {
+      "maxDuration": 30
+    }
+  },
+  "regions": ["iad1"],
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "develop": true
+    }
+  }
+} 

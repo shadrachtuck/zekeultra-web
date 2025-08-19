@@ -1,0 +1,41 @@
+{
+  "id": "background_video",
+  "type": "SharedSlice",
+  "name": "BackgroundVideo",
+  "description": "BackgroundVideo",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "background_video_url": {
+          "type": "Text",
+          "config": {
+            "label": "Background Video URL",
+            "placeholder": ""
+          }
+        },
+        "video_provider": {
+          "type": "Text",
+          "config": {
+            "label": "video provider",
+            "placeholder": ""
+          }
+        },
+        "background_image": {
+          "type": "Image",
+          "config": {
+            "label": "background image",
+            "constraint": {},
+            "thumbnails": []
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

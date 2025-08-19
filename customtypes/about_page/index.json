@@ -1,6 +1,9 @@
 {
-  "format": "custom",
+  "format": "page",
   "id": "about_page",
+  "label": "about_page",
+  "repeatable": false,
+  "status": true,
   "json": {
     "Main": {
       "page_title": {
@@ -36,77 +39,8 @@
       },
       "slices": {
         "type": "Slices",
-        "fieldset": "Slice Zone",
-        "config": {
-          "choices": {
-            "media_gallery": {
-              "type": "SharedSlice",
-              "fieldset": "Media Gallery",
-              "description": "Display a media gallery",
-              "icon": "photo_library",
-              "display": "list",
-              "non-repeat": {
-                "gallery_title": {
-                  "type": "Text",
-                  "config": {
-                    "label": "Gallery Title"
-                  }
-                }
-              },
-              "repeat": {
-                "title": {
-                  "type": "Text",
-                  "config": {
-                    "label": "Title"
-                  }
-                },
-                "media_type": {
-                  "type": "Select",
-                  "config": {
-                    "label": "Media Type",
-                    "options": [
-                      {
-                        "value": "image",
-                        "label": "Image"
-                      },
-                      {
-                        "value": "video",
-                        "label": "Video"
-                      },
-                      {
-                        "value": "embed",
-                        "label": "Embed"
-                      }
-                    ]
-                  }
-                },
-                "image": {
-                  "type": "Image",
-                  "config": {
-                    "label": "Image"
-                  }
-                },
-                "video_url": {
-                  "type": "Link",
-                  "config": {
-                    "label": "Video URL"
-                  }
-                },
-                "embed_code": {
-                  "type": "StructuredText",
-                  "config": {
-                    "label": "Embed Code",
-                    "multi": "preformatted"
-                  }
-                }
-              }
-            }
-          }
-        }
+        "fieldset": "Slice Zone"
       }
     }
-  },
-  "label": "about_page",
-  "repeatable": false,
-  "status": true
+  }
 }

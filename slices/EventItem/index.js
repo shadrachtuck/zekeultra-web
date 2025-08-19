@@ -17,7 +17,7 @@ export default function EventItem({ slice }) {
         </div>
         {event.ticket_link?.url && (
           <div className="flex items-start">
-            <a href={event.ticket_link.url} target="_blank" rel="noopener noreferrer" className="px-4 py-2 border hover:bg-black hover:text-white transition-colors">
+            <a href={event.ticket_link.url} target="_blank" rel="noopener noreferrer" className="px-4 py-2 border hover: hover:text-black transition-colors">
               Tickets
             </a>
           </div>

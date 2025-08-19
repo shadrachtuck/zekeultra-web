@@ -28,6 +28,9 @@
         "fieldset": "Slice Zone",
         "config": {
           "choices": {
+            "background_video": {
+              "type": "SharedSlice"
+            },
             "hero_section": {
               "type": "SharedSlice"
             },
@@ -41,6 +44,9 @@
               "type": "SharedSlice"
             },
             "event_item": {
+              "type": "SharedSlice"
+            },
+            "product_carousel": {
               "type": "SharedSlice"
             }
           }

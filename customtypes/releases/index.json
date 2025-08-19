@@ -2,7 +2,7 @@
   "format": "page",
   "id": "releases",
   "label": "Releases",
-  "repeatable": true,
+  "repeatable": false,
   "status": true,
   "json": {
     "Main": {

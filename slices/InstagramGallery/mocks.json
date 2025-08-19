@@ -1,0 +1,30 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"instagram_username": {
+				"__TYPE__": "FieldContent",
+				"value": "product",
+				"type": "Text"
+			},
+			"embed_code": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Amet minim enim quis excepteur quis ad eu cupidatat proident irure ipsum. Occaecat ea voluptate id ex commodo ullamco amet."
+						}
+					}
+				]
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	}
+]

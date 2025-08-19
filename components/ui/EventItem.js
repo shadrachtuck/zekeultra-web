@@ -29,7 +29,7 @@ export default function EventItem({ event, isPast = false }) {
               href={event.data.ticket_link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 border hover:bg-black hover:text-white transition-colors"
+              className="px-4 py-2 border hover: hover:text-black transition-colors"
             >
               Tickets
             </a>

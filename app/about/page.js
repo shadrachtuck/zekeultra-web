@@ -8,35 +8,34 @@ export default async function AboutPage() {
   const client = createClient();
   
   try {
+    console.log('[AboutPage] Fetching about page data...');
     const page = await client.getSingle('about_page');
+    console.log('[AboutPage] Loaded about page data:', page);
     
     return (
       <div className="min-h-screen">
         {/* Hero Section */}
         {page.data.hero_image && (
-          <div className="relative h-[50vh] mb-12">
+          <div className="relative h-[50vh] ">
             <PrismicNextImage
               field={page.data.hero_image}
               fill
               style={{ objectFit: 'cover' }}
               priority
             />
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-              <div className="text-center text-white">
-                <h1 className="text-4xl md:text-6xl font-bold mb-4">
-                  {page.data.artist_name || 'About'}
-                </h1>
-              </div>
+            <div className="absolute inset-0  bg-opacity-40 flex items-center justify-center">
             </div>
           </div>
         )}
+
         
-      <div className="container mx-auto py-12 px-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="container mx-auto py-12 px-4">
+          <div className="max-w-4xl mx-auto">
             {/* Bio Section */}
+            <h1 className="text-3xl font-bold mb-8 pb-4">{page.data.page_title || 'About'}</h1>
             {page.data.bio && (
               <div className="mb-16">
-          <div className="prose prose-lg max-w-none">
+                <div className="prose prose-lg max-w-none text-black">
                   <PrismicRichText field={page.data.bio} />
                 </div>
               </div>
@@ -51,11 +50,15 @@ export default async function AboutPage() {
       </div>
     );
   } catch (error) {
+    console.error('[AboutPage] Error loading about page:', error);
     return (
-      <div className="container mx-auto py-12 px-4">
+      <div className="container mx-auto page-container">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">About</h1>
-          <p>About page content will be managed through Prismic CMS.</p>
+          <h1 className="text-3xl font-bold mb-8">About Page</h1>
+          <div className="prose prose-lg max-w-none text-black">
+            <p>About page content will be managed through Prismic CMS.</p>
+            <p>Please create an &quot;about_page&quot; document in your Prismic repository to display content here.</p>
+          </div>
         </div>
       </div>
     );

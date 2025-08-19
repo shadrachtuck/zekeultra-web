@@ -1,74 +1,61 @@
 // app/tour/page.js
 import { createClient } from '../../lib/prismic';
-import EventItem from '../../components/ui/EventItem';
+import { getArtistEvents, getUpcomingEvents } from '../../lib/bandsintown';
+import BandsintownEventItem from '../../components/ui/BandsintownEventItem';
+import BandsintownWidget from '../../components/ui/BandsintownWidget';
 
 export default async function TourPage() {
   const client = createClient();
-  
-  try {
-    // Get upcoming events
-    const events = await client.getAllByType('event', {
-      orderings: {
-        field: 'my.event.date',
-        direction: 'asc',
-      }
-    });
+  const siteSettings = await client.getSingle('site_settings');
 
-    // Filter events by date
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const upcomingEvents = events.filter(event => {
-      const eventDate = new Date(event.data.date);
-      return eventDate >= today;
-    });
+  // Debug log for siteSettings.data
+  console.log('[TourPage] siteSettings.data:', siteSettings.data);
 
-    const pastEvents = events.filter(event => {
-      const eventDate = new Date(event.data.date);
-      return eventDate < today;
-    }).slice(0, 10); // Limit to 10 most recent past events
+  const enableBandsintown = siteSettings?.data?.enable_bandsintown ?? true;
+  const bandsintownAppId = siteSettings?.data?.bandsintown_api_id || '';
+  const artistName = siteSettings?.data?.bandsintown_artist_name || '';
 
+  let events = [];
+  let error = null;
+
+  if (enableBandsintown && artistName && bandsintownAppId) {
+    try {
+      const bandsintownEvents = await getArtistEvents(artistName, bandsintownAppId);
+      events = getUpcomingEvents(bandsintownEvents);
+    } catch (err) {
+      error = err;
+    }
+  }
+
+  if (events.length > 0) {
     return (
-      <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold mb-12">Tour</h1>
-        
-        <div className="max-w-3xl mx-auto">
-          {upcomingEvents.length > 0 ? (
-            <div className="space-y-8 mb-16">
-              <h2 className="text-2xl font-medium mb-6">Upcoming Events</h2>
-              {upcomingEvents.map(event => (
-                <EventItem key={event.id} event={event} />
-              ))}
-            </div>
-          ) : (
-            <div className="mb-16">
-              <p className="text-xl">No upcoming events scheduled at this time.</p>
-            </div>
-          )}
-          
-          {pastEvents.length > 0 && (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-medium mb-6">Past Events</h2>
-              {pastEvents.map(event => (
-                <EventItem key={event.id} event={event} isPast />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  } catch (error) {
-    // Fallback content if Prismic data is not available
-    return (
-      <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold mb-12">Tour</h1>
-        
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-16">
-            <p className="text-xl">Tour dates will be announced soon.</p>
+      <main className="min-h-screen ">
+        <div className="container mx-auto py-12 px-4">
+          <h1 className="text-3xl font-bold  pb-4">Tour</h1>
+          <div className="max-w-4xl mx-auto space-y-6">
+            {events.map(event => (
+              <BandsintownEventItem key={event.id} event={event} />
+            ))}
           </div>
         </div>
-      </div>
+      </main>
     );
   }
+
+  // Show no events message instead of widget
+  return (
+    <main className="min-h-screen ">
+      <div className="container mx-auto py-12 px-4">
+        <h1 className="text-3xl font-bold  text-center pb-4">Tour Dates</h1>
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-xl text-gray-300 mb-8">No events right now. Check back soon...</p>
+          {error && (
+            <div className="text-red-500 text-center mt-4">
+              There was a problem fetching events. Please try again later.
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  );
 }

@@ -1,12 +1,16 @@
 import Header from './Header';
 import Footer from './Footer';
+import CartProvider from './CartProvider';
+// import BackgroundVideo from '../ui/BackgroundVideo';
 
 export default function Layout({ children }) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <CartProvider>
       <Header />
-      <main className="flex-1">{children}</main>
+      {/* <BackgroundVideo /> */}
+      <main className="flex-1 z-10 bg-transparent relative">
+        {children}</main>
       <Footer />
-    </div>
+    </CartProvider>
   );
 } 

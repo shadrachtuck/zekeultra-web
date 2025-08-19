@@ -1,0 +1,67 @@
+{
+  "format": "custom",
+  "id": "contact",
+  "label": "contact",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "contact_name": {
+        "type": "Text",
+        "config": {
+          "label": "Contact Name",
+          "placeholder": ""
+        }
+      },
+      "contact_title": {
+        "type": "Text",
+        "config": {
+          "label": "Contact Page Title",
+          "placeholder": ""
+        }
+      },
+      "contact_email": {
+        "type": "Text",
+        "config": {
+          "label": "Contact Email",
+          "placeholder": ""
+        }
+      },
+      "contact_message": {
+        "type": "Text",
+        "config": {
+          "label": "Contact Message",
+          "placeholder": "Hello..."
+        }
+      },
+      "submit_button_text": {
+        "type": "Text",
+        "config": {
+          "label": "Submit Button Text",
+          "placeholder": ""
+        }
+      },
+      "success_message": {
+        "type": "Text",
+        "config": {
+          "label": "Success Message",
+          "placeholder": ""
+        }
+      },
+      "failure_message": {
+        "type": "Text",
+        "config": {
+          "label": "Failure Message",
+          "placeholder": ""
+        }
+      },
+      "contact_phone": {
+        "type": "Text",
+        "config": {
+          "label": "Contact Phone",
+          "placeholder": ""
+        }
+      }
+    }
+  }
+}

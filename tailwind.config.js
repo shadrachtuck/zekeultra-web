@@ -23,7 +23,7 @@ module.exports = {
         display: ['var(--font-display)', 'system-ui', 'sans-serif'],
         
         // ZekeUltra brand font
-        brigends: ['var(--font-brigends-expanded)', 'system-ui', 'sans-serif'],
+        brigends: ['Brigends Expanded', 'Arial Black', 'Helvetica Bold', 'system-ui', 'sans-serif'],
         
         // Brand fonts
         brand: ['var(--font-custom)', 'Inter', 'system-ui', 'sans-serif'],

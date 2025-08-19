@@ -5,7 +5,7 @@ export default function UpcomingEvents({ slice }) {
     <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-6xl mx-auto">
         {slice.primary.section_title && (
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 pb-2">
             {slice.primary.section_title}
           </h2>
         )}
@@ -51,7 +51,7 @@ export default function UpcomingEvents({ slice }) {
                       href={item.ticket_link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-colors font-medium"
+                      className="px-6 py-2  text-black rounded-full hover:bg-gray-800 transition-colors font-medium"
                     >
                       Get Tickets
                     </a>
@@ -66,7 +66,7 @@ export default function UpcomingEvents({ slice }) {
           <div className="text-center mt-12">
             <a
               href={slice.primary.view_all_link.url}
-              className="inline-block px-8 py-3 border-2 border-black text-black rounded-full hover:bg-black hover:text-white transition-colors font-medium"
+              className="inline-block px-8 py-3 text-black rounded-full hover: hover:text-black transition-colors font-medium"
             >
               {slice.primary.view_all_text || 'View All Events'}
             </a>

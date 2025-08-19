@@ -3,10 +3,16 @@
 import dynamic from "next/dynamic";
 
 export const components = {
-  hero_section: dynamic(() => import("./HeroSection")),
-  featured_releases: dynamic(() => import("./FeaturedReleases")),
-  upcoming_events: dynamic(() => import("./UpcomingEvents")),
-  release_card: dynamic(() => import("./ReleaseCard")),
+  alternate_grid: dynamic(() => import("./AlternateGrid")),
+  background_video: dynamic(() => import("./BackgroundVideo")),
+  contact: dynamic(() => import("./Contact")),
   event_item: dynamic(() => import("./EventItem")),
+  featured_releases: dynamic(() => import("./FeaturedReleases")),
+  hero_section: dynamic(() => import("./HeroSection")),
+  instagram_gallery: dynamic(() => import("./InstagramGallery")),
   media_gallery: dynamic(() => import("./MediaGallery")),
+  release_card: dynamic(() => import("./ReleaseCard")),
+  upcoming_events: dynamic(() => import("./UpcomingEvents")),
+  video_carousel: dynamic(() => import("./VideoCarousel")),
+  product_carousel: dynamic(() => import("./ProductCarousel")),
 };

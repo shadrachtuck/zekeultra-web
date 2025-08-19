@@ -1,0 +1,60 @@
+{
+  "id": "bandsintown_config",
+  "label": "Bandsintown Configuration",
+  "format": "page",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "artist_name": {
+        "type": "Text",
+        "config": {
+          "label": "Artist Name",
+          "placeholder": "Enter the exact artist name as it appears on Bandsintown",
+          "allow_target_blank": true,
+          "single": "paragraph"
+        }
+      },
+      "app_id": {
+        "type": "Text",
+        "config": {
+          "label": "Bandsintown App ID (Optional)",
+          "placeholder": "Your Bandsintown app ID for higher rate limits",
+          "allow_target_blank": true,
+          "single": "paragraph"
+        }
+      },
+      "enable_bandsintown": {
+        "type": "Boolean",
+        "config": {
+          "label": "Enable Bandsintown Integration",
+          "default_value": true,
+          "placeholder_false": "Use Prismic events only",
+          "placeholder_true": "Use Bandsintown API with Prismic fallback"
+        }
+      },
+      "fallback_message": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Fallback Message",
+          "placeholder": "Message to display when no events are available",
+          "allow_target_blank": true,
+          "single": "paragraph",
+          "use_as_title": false,
+          "choices": {
+            "paragraph": {
+              "type": "paragraph",
+              "config": {
+                "label": "Paragraph",
+                "placeholder": "Enter fallback message...",
+                "allow_target_blank": true,
+                "required": false,
+                "use_as_title": false
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

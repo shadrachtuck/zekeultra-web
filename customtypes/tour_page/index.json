@@ -1,0 +1,276 @@
+{
+  "id": "tour_page",
+  "label": "Tour Page",
+  "format": "page",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "page_title": {
+        "type": "Text",
+        "config": {
+          "label": "Page Title",
+          "placeholder": "Tour",
+          "allow_target_blank": true,
+          "single": "paragraph"
+        }
+      },
+      "page_description": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Page Description",
+          "placeholder": "Enter a description for the tour page",
+          "allow_target_blank": true,
+          "single": "paragraph",
+          "use_as_title": false,
+          "choices": {
+            "paragraph": {
+              "type": "paragraph",
+              "config": {
+                "label": "Paragraph",
+                "placeholder": "Enter page description...",
+                "allow_target_blank": true,
+                "required": false,
+                "use_as_title": false
+              }
+            }
+          }
+        }
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Tour Page Slices",
+        "config": {
+          "choices": {
+            "upcoming_events": {
+              "type": "SharedSlice",
+              "fieldset": "Tour Page Slices",
+              "config": {
+                "label": "Upcoming Events",
+                "choices": {
+                  "default": {
+                    "type": "SharedSliceVariation",
+                    "id": "default",
+                    "name": "Default",
+                    "docURL": "...",
+                    "version": "initial",
+                    "description": "Default",
+                    "imageUrl": "",
+                    "primary": {
+                      "section_title": {
+                        "type": "Text",
+                        "config": {
+                          "label": "Section Title",
+                          "placeholder": "Upcoming Events",
+                          "allow_target_blank": true,
+                          "single": "paragraph"
+                        }
+                      },
+                      "section_description": {
+                        "type": "StructuredText",
+                        "config": {
+                          "label": "Section Description",
+                          "placeholder": "Description for the events section",
+                          "allow_target_blank": true,
+                          "single": "paragraph",
+                          "use_as_title": false,
+                          "choices": {
+                            "paragraph": {
+                              "type": "paragraph",
+                              "config": {
+                                "label": "Paragraph",
+                                "placeholder": "Enter section description...",
+                                "allow_target_blank": true,
+                                "required": false,
+                                "use_as_title": false
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "view_all_link": {
+                        "type": "Link",
+                        "config": {
+                          "label": "View All Link",
+                          "placeholder": "Link to view all events",
+                          "allowTargetBlank": true,
+                          "select": "media"
+                        }
+                      },
+                      "view_all_text": {
+                        "type": "Text",
+                        "config": {
+                          "label": "View All Text",
+                          "placeholder": "View All Events",
+                          "allow_target_blank": true,
+                          "single": "paragraph"
+                        }
+                      }
+                    },
+                    "items": {
+                      "date": {
+                        "type": "Date",
+                        "config": {
+                          "label": "Event Date",
+                          "placeholder": "Select event date"
+                        }
+                      },
+                      "venue": {
+                        "type": "Text",
+                        "config": {
+                          "label": "Venue Name",
+                          "placeholder": "Enter venue name",
+                          "allow_target_blank": true,
+                          "single": "paragraph"
+                        }
+                      },
+                      "location": {
+                        "type": "Text",
+                        "config": {
+                          "label": "Location",
+                          "placeholder": "City, State/Country",
+                          "allow_target_blank": true,
+                          "single": "paragraph"
+                        }
+                      },
+                      "description": {
+                        "type": "StructuredText",
+                        "config": {
+                          "label": "Event Description",
+                          "placeholder": "Enter event description",
+                          "allow_target_blank": true,
+                          "single": "paragraph",
+                          "use_as_title": false,
+                          "choices": {
+                            "paragraph": {
+                              "type": "paragraph",
+                              "config": {
+                                "label": "Paragraph",
+                                "placeholder": "Enter event description...",
+                                "allow_target_blank": true,
+                                "required": false,
+                                "use_as_title": false
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "ticket_link": {
+                        "type": "Link",
+                        "config": {
+                          "label": "Ticket Link",
+                          "placeholder": "Link to purchase tickets",
+                          "allowTargetBlank": true,
+                          "select": "media"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "hero_section": {
+              "type": "SharedSlice",
+              "fieldset": "Tour Page Slices",
+              "config": {
+                "label": "Hero Section",
+                "choices": {
+                  "default": {
+                    "type": "SharedSliceVariation",
+                    "id": "default",
+                    "name": "Default",
+                    "docURL": "...",
+                    "version": "initial",
+                    "description": "Default",
+                    "imageUrl": "",
+                    "primary": {
+                      "title": {
+                        "type": "StructuredText",
+                        "config": {
+                          "label": "Title",
+                          "placeholder": "Enter hero title",
+                          "allow_target_blank": true,
+                          "single": "heading1",
+                          "use_as_title": false,
+                          "choices": {
+                            "heading1": {
+                              "type": "heading1",
+                              "config": {
+                                "label": "Heading 1",
+                                "placeholder": "Enter hero title...",
+                                "allow_target_blank": true,
+                                "required": false,
+                                "use_as_title": false
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "subtitle": {
+                        "type": "StructuredText",
+                        "config": {
+                          "label": "Subtitle",
+                          "placeholder": "Enter hero subtitle",
+                          "allow_target_blank": true,
+                          "single": "paragraph",
+                          "use_as_title": false,
+                          "choices": {
+                            "paragraph": {
+                              "type": "paragraph",
+                              "config": {
+                                "label": "Paragraph",
+                                "placeholder": "Enter hero subtitle...",
+                                "allow_target_blank": true,
+                                "required": false,
+                                "use_as_title": false
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "background_image": {
+                        "type": "Image",
+                        "config": {
+                          "label": "Background Image",
+                          "constraint": {},
+                          "thumbnails": []
+                        }
+                      },
+                      "background_video": {
+                        "type": "Link",
+                        "config": {
+                          "label": "Background Video (YouTube/Vimeo)",
+                          "placeholder": "Enter YouTube or Vimeo URL",
+                          "allowTargetBlank": true,
+                          "select": "media"
+                        }
+                      },
+                      "video_provider": {
+                        "type": "Select",
+                        "config": {
+                          "label": "Video Provider",
+                          "placeholder": "Select video provider",
+                          "default_value": "youtube",
+                          "options": [
+                            {
+                              "value": "youtube",
+                              "label": "YouTube"
+                            },
+                            {
+                              "value": "vimeo",
+                              "label": "Vimeo"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

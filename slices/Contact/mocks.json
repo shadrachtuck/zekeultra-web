@@ -1,0 +1,50 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"name": {
+				"__TYPE__": "FieldContent",
+				"value": "only",
+				"type": "Text"
+			},
+			"email": {
+				"__TYPE__": "FieldContent",
+				"value": "however",
+				"type": "Text"
+			},
+			"message": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Amet deserunt et eu esse ad minim sint qui veniam eiusmod."
+						}
+					}
+				]
+			},
+			"submit_button_name": {
+				"__TYPE__": "FieldContent",
+				"value": "talk",
+				"type": "Text"
+			},
+			"contact_error_message": {
+				"__TYPE__": "FieldContent",
+				"value": "gold",
+				"type": "Text"
+			},
+			"contact_success_message": {
+				"__TYPE__": "FieldContent",
+				"value": "fear",
+				"type": "Text"
+			},
+			"subject": {
+				"__TYPE__": "FieldContent",
+				"value": "percent",
+				"type": "Text"
+			}
+		},
+		"items": []
+	}
+]

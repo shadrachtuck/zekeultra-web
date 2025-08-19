@@ -70,18 +70,13 @@
           }
         }
       },
-      "media_items": {
-        "type": "Group",
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
         "config": {
-          "label": "media_items",
-          "repeat": true,
-          "fields": {
-            "embed_code": {
-              "type": "Embed",
-              "config": {
-                "label": "embed_code",
-                "placeholder": ""
-              }
+          "choices": {
+            "video_carousel": {
+              "type": "SharedSlice"
             }
           }
         }

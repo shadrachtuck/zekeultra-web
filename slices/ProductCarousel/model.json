@@ -1,0 +1,85 @@
+{
+  "id": "product_carousel",
+  "type": "SharedSlice",
+  "name": "ProductCarousel",
+  "description": "ProductCarousel",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "ProductCarousel",
+      "imageUrl": "",
+      "primary": {
+        "section_title": {
+          "type": "Text",
+          "config": {
+            "label": "Section Title",
+            "placeholder": "Featured Products"
+          }
+        },
+        "use_stripe_products": {
+          "type": "Boolean",
+          "config": {
+            "label": "Use Stripe Products",
+            "default_value": true,
+            "placeholder": "Automatically pull products from Stripe"
+          }
+        }
+      },
+      "items": {
+        "product_id": {
+          "type": "Text",
+          "config": {
+            "label": "Product ID",
+            "placeholder": "prod_123456789"
+          }
+        },
+        "product_name": {
+          "type": "Text",
+          "config": {
+            "label": "Product Name",
+            "placeholder": "Product Name"
+          }
+        },
+        "product_description": {
+          "type": "Text",
+          "config": {
+            "label": "Product Description",
+            "placeholder": "Product description..."
+          }
+        },
+        "product_image": {
+          "type": "Image",
+          "config": {
+            "label": "Product Image",
+            "constraint": {},
+            "thumbnails": []
+          }
+        },
+        "product_price": {
+          "type": "Number",
+          "config": {
+            "label": "Product Price (in cents)",
+            "placeholder": "2500"
+          }
+        },
+        "stripe_price_id": {
+          "type": "Text",
+          "config": {
+            "label": "Stripe Price ID",
+            "placeholder": "price_123456789"
+          }
+        },
+        "currency": {
+          "type": "Text",
+          "config": {
+            "label": "Currency",
+            "placeholder": "usd"
+          }
+        }
+      }
+    }
+  ]
+} 

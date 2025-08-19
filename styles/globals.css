@@ -2,13 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Brigends Expanded';
+  src: url('/fonts/Brigends%20Expanded.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   html {
-    font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
   }
   
   body {
-    @apply text-black font-sans;
+    @apply text-black bg-white font-sans;
+  }
+  
+  /* Remove all border-radius globally */
+  *, *:before, *:after {
+    border-radius: 0 !important;
   }
   
   /* Ensure header transparency */
@@ -19,7 +32,7 @@
   
   /* Typography hierarchy */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-bold;
+    @apply font-bold;
   }
   
   h1 {
@@ -49,6 +62,17 @@
   
   .font-heading {
     font-family: var(--font-display), 'Inter', system-ui, sans-serif;
+  }
+  
+  .font-brigends {
+    font-family: 'Brigends Expanded', 'Arial Black', 'Helvetica Bold', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  /* Remove global mix-blend-mode - only apply where specifically needed */
+  h1, h2, h3, h4, h5, h6, p, a, span, label, li, dt, dd, th, td, strong, em, b, i {
+    color: #000;
   }
 }
 
@@ -90,58 +114,55 @@
   }
   
   .caption-text {
-    @apply font-sans text-sm text-gray-600;
+    @apply font-sans text-sm text-gray-400;
   }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-invert {
+    color: #000;
+    mix-blend-mode: difference;
   }
+  .mix-blend-difference {
+    mix-blend-mode: difference;
+  }
+  .header-blend { mix-blend-mode: difference; isolation: isolate; }
   
-  /* Font utilities */
-  .font-light {
-    font-weight: 300;
-  }
-  
-  .font-normal {
-    font-weight: 400;
-  }
-  
-  .font-medium {
-    font-weight: 500;
-  }
-  
-  .font-semibold {
-    font-weight: 600;
-  }
-  
-  .font-bold {
-    font-weight: 700;
-  }
-  
-  .font-extrabold {
-    font-weight: 800;
-  }
-  
-  .font-black {
-    font-weight: 900;
-  }
+  /* Line clamp utilities */
+  .line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
+  .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
 }
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground: #000000;
 }
 
 body {
   color: var(--foreground);
+  background-color: var(--background);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
-} 
+}
+
+/* Responsive header font size */
+  .header-logo {
+    font-size: xx-large;
+  }
+  
+  @media (min-width: 768px) {
+    .header-logo {
+      font-size: xxx-large;
+    }
+  }
+  
+  /* Fix YouTube iframe accessibility issues */
+  iframe[src*="youtube.com"] {
+    isolation: isolate;
+  }
+  
+  /* Suppress browser extension warnings */
+  body[data-new-gr-c-s-check-loaded],
+  body[data-gr-ext-installed] {
+    /* These attributes are added by browser extensions like Grammarly */
+  } 

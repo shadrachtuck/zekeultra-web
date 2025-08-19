@@ -1,0 +1,35 @@
+{
+  "id": "media_page",
+  "label": "Media Page",
+  "format": "page",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "title": {
+        "type": "Text",
+        "config": {
+          "label": "Page Title",
+          "placeholder": "Media",
+          "single": "paragraph"
+        }
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Media Page Slices",
+        "config": {
+          "choices": {
+            "video_carousel": {
+              "type": "SharedSlice",
+              "fieldset": "Media Page Slices"
+            },
+            "instagram_gallery": {
+              "type": "SharedSlice",
+              "fieldset": "Media Page Slices"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

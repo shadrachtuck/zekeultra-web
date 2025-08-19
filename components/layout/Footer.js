@@ -8,11 +8,11 @@ export default async function Footer() {
     const settings = await client.getSingle('site_settings');
     
     return (
-      <footer className="py-8 px-4 border-t">
+      <footer className="py-4 mt-8 px-4 border-t">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              © {new Date().getFullYear()} {settings.data.artist_name}
+            <div className="md:mb-0">
+              © ZekeUltra; Mishap Creative Works {new Date().getFullYear()}
             </div>
             
             {settings.data.social_links && settings.data.social_links.length > 0 && (
@@ -37,11 +37,11 @@ export default async function Footer() {
   } catch (error) {
     // Fallback footer if Prismic data is not available
     return (
-      <footer className="py-8 px-4 border-t">
+      <footer className="py-8 mt-8 px-4 border-t">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
-              © {new Date().getFullYear()} Mishap Creative
+            © ZekeUltra; Mishap Creative Works {new Date().getFullYear()}
             </div>
             
             <div className="flex space-x-4">

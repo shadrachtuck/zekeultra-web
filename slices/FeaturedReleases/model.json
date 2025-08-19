@@ -61,22 +61,15 @@
             "multi": "paragraph,strong,em,hyperlink"
           }
         },
-        "platform_name": {
-          "type": "Text",
-          "config": {
-            "label": "Platform Name",
-            "placeholder": "e.g., Spotify, Apple Music"
-          }
-        },
         "platform_url": {
           "type": "Link",
           "config": {
             "label": "Platform URL",
-            "placeholder": "Link to platform",
+            "placeholder": "",
             "select": null,
             "allowTargetBlank": true,
             "allowText": true,
-            "repeat": false
+            "repeat": true
           }
         }
       }

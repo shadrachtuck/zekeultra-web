@@ -1,0 +1,40 @@
+{
+  "id": "video_carousel",
+  "type": "SharedSlice",
+  "name": "VideoCarousel",
+  "description": "A widescreen carousel for video embeds.",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "",
+      "version": "1.0",
+      "description": "Default",
+      "primary": {
+        "section_title": {
+          "type": "Text",
+          "config": {
+            "label": "Section Title",
+            "placeholder": "Featured Videos"
+          }
+        }
+      },
+      "items": {
+        "video_url": {
+          "type": "Text",
+          "config": {
+            "label": "Video Embed URL",
+            "placeholder": "YouTube or Vimeo URL"
+          }
+        },
+        "caption": {
+          "type": "Text",
+          "config": {
+            "label": "Caption",
+            "placeholder": "Optional caption for the video"
+          }
+        }
+      }
+    }
+  ]
+} 

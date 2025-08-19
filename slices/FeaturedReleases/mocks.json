@@ -81,23 +81,21 @@
 						}
 					],
 					[
-						"platform_name",
-						{
-							"__TYPE__": "FieldContent",
-							"value": "ourselves",
-							"type": "Text"
-						}
-					],
-					[
 						"platform_url",
 						{
-							"key": "a6cbaabe-95f5-4c1a-bc54-9710df7c8740",
-							"__TYPE__": "LinkContent",
-							"value": {
-								"__TYPE__": "ExternalLink",
-								"url": "http://google.com",
-								"text": "amount"
-							}
+							"__TYPE__": "RepeatableContent",
+							"type": "Link",
+							"value": [
+								{
+									"key": "8d7b327c-e86c-42ad-989b-e85cc140057f",
+									"__TYPE__": "LinkContent",
+									"value": {
+										"__TYPE__": "ExternalLink",
+										"url": "http://twitter.com",
+										"text": "belong"
+									}
+								}
+							]
 						}
 					]
 				]

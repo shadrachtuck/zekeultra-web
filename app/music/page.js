@@ -15,7 +15,7 @@ export default async function MusicPage() {
 
     return (
       <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold mb-12">Music</h1>
+        <h1 className="text-3xl font-bold  pb-4">Music</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {releases.map(release => (
@@ -31,10 +31,11 @@ export default async function MusicPage() {
       </div>
     );
   } catch (error) {
+    console.error('Error fetching releases:', error);
     // Fallback content if Prismic data is not available
     return (
       <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold mb-12">Music</h1>
+        <h1 className="text-3xl font-bold  pb-4">Music</h1>
         
         <div className="text-center py-12">
           <p className="text-xl">Music releases will be available soon.</p>
