@@ -30,8 +30,8 @@ export default async function TourPage() {
   if (events.length > 0) {
     return (
       <main className="min-h-screen ">
-        <div className="container mx-auto py-12 px-4">
-          <h1 className="text-3xl font-bold  pb-4">Tour</h1>
+        <div className="container mx-auto py-12 px-2">
+          <h1 className="text-2xl font-bold  pb-4">Tour</h1>
           <div className="max-w-4xl mx-auto space-y-6">
             {events.map(event => (
               <BandsintownEventItem key={event.id} event={event} />
@@ -45,8 +45,8 @@ export default async function TourPage() {
   // Show no events message instead of widget
   return (
     <main className="min-h-screen ">
-      <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold  text-center pb-4">Tour Dates</h1>
+      <div className="container mx-auto py-12 px-2">
+        <h1 className="text-2xl font-bold  text-center pb-4">Tour Dates</h1>
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-xl text-gray-300 mb-8">No events right now. Check back soon...</p>
           {error && (

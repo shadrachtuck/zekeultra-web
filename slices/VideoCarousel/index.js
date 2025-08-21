@@ -165,14 +165,14 @@ export default function VideoCarousel({ slice }) {
               )}
             </div>
             {item.caption && (
-              <div className="p-4 text-center">
+              <div className="p-2 text-center">
                 <h3 className="text-xl font-bold text-black">{item.caption}</h3>
               </div>
             )}
 
             {/* Navigation with Arrows and Dots */}
             {items.length > 1 && (
-              <div className="flex items-center justify-between px-4 pb-4">
+              <div className="flex items-center justify-between px-2 pb-4">
                 {/* Left Arrow */}
                 <button
                   onClick={prevSlide}

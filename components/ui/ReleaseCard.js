@@ -19,7 +19,7 @@ export default function ReleaseCard({ release }) {
 
   return (
     <div className="group">
-      <div className="border border-black bg-transparent p-4">
+      <div className="border border-black bg-transparent p-2">
         <Link href={`/releases/${getSlug()}`} className="block hover:opacity-90 transition-opacity">
           <div className="relative aspect-square mb-4 overflow-hidden rounded-lg">
             <PrismicNextImage 

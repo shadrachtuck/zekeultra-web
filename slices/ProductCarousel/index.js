@@ -42,6 +42,10 @@ export default function ProductCarousel({ slice }) {
   const useStripeProducts = slice.primary.use_stripe_products === null || slice.primary.use_stripe_products === undefined 
     ? true 
     : Boolean(slice.primary.use_stripe_products) || slice.primary.use_stripe_products === 'true';
+  
+  // Check if we should show only featured products
+  const showOnlyFeatured = slice.primary.show_only_featured === true;
+  
   const manualProducts = slice.items || [];
 
 
@@ -50,7 +54,6 @@ export default function ProductCarousel({ slice }) {
     const fetchProducts = async () => {
       if (useStripeProducts) {
         try {
-          console.log("here stripe");
           const client = createClient();
           const siteSettings = await client.getSingle('site_settings');
           const stripeApiKey = siteSettings?.data?.stripe_private_api_key;
@@ -73,7 +76,7 @@ export default function ProductCarousel({ slice }) {
               }
             });
             
-            const processedProducts = Object.values(productMap)
+            let processedProducts = Object.values(productMap)
               .filter(product => product.prices.length > 0)
               .map(product => {
                 const price = product.prices[0];
@@ -88,6 +91,22 @@ export default function ProductCarousel({ slice }) {
                 };
               });
             
+            // Filter to show only featured products if enabled
+            if (showOnlyFeatured && slice.primary.featured_product_names) {
+              const featuredNames = slice.primary.featured_product_names
+                .map(item => item.product_name?.toLowerCase().trim())
+                .filter(Boolean);
+              
+              if (featuredNames.length > 0) {
+                processedProducts = processedProducts.filter(product => 
+                  featuredNames.some(featuredName => 
+                    product.name.toLowerCase().includes(featuredName) ||
+                    featuredName.includes(product.name.toLowerCase())
+                  )
+                );
+              }
+            }
+            
             setProducts(processedProducts);
           } else {
             console.error('No Stripe API key found in site settings');
@@ -98,15 +117,32 @@ export default function ProductCarousel({ slice }) {
           setProducts([]);
         }
       } else {
-        console.log('here manual')
         // Use manual products
-        setProducts(manualProducts);
+        let filteredManualProducts = manualProducts;
+        
+        // Filter manual products if featured filtering is enabled
+        if (showOnlyFeatured && slice.primary.featured_product_names) {
+          const featuredNames = slice.primary.featured_product_names
+            .map(item => item.product_name?.toLowerCase().trim())
+            .filter(Boolean);
+          
+          if (featuredNames.length > 0) {
+            filteredManualProducts = manualProducts.filter(product => 
+              featuredNames.some(featuredName => 
+                (product.product_name || '').toLowerCase().includes(featuredName) ||
+                featuredName.includes((product.product_name || '').toLowerCase())
+              )
+            );
+          }
+        }
+        
+        setProducts(filteredManualProducts);
       }
       setLoading(false);
     };
 
     fetchProducts();
-  }, [useStripeProducts, manualProducts]);
+  }, [useStripeProducts, manualProducts, showOnlyFeatured]);
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
@@ -144,7 +180,12 @@ export default function ProductCarousel({ slice }) {
   if (!products || products.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">No products available.</p>
+        <p className="text-gray-500">
+          {showOnlyFeatured 
+            ? "No featured products found. Check your site settings for featured product names."
+            : "No products available."
+          }
+        </p>
       </div>
     );
   }
@@ -162,25 +203,30 @@ export default function ProductCarousel({ slice }) {
 
   return (
     <StoreClientWrapper>
-              <section className="w-full py-12">
-          <div className="container mx-auto px-4">
+              <section className="w-full pt-12">
+          <div className="container mx-auto px-2">
             <div className="pb-4">
-              <div className="flex justify-end">
+              <div className="flex justify-between items-center">
+                {showOnlyFeatured && (
+                  <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full px-2">
+                    Featured merch
+                  </div>
+                )}
                 <Link 
                   href="/store" 
                   className="flex items-center gap-2 text-black hover:text-gray-700 transition-colors font-medium"
                 >
-                  View Store
+                  View store
                   <ViewStoreArrow />
                 </Link>
               </div>
             </div>
             
-            <div className="max-w-3xl mx-auto">
-                      {/* Product Card */}
+            <div className="mx-auto">
+            {/* Product Card */}
             <div className="bg-white overflow-hidden w-full">
             <Link href={`/store/${productSlug}`} className="block">
-              <div className="aspect-square w-full">
+              <div className="w-full">
                 {productImage ? (
                   <img
                     src={productImage}
@@ -194,14 +240,14 @@ export default function ProductCarousel({ slice }) {
                   </div>
                 )}
               </div>
-              <div className="p-4 text-center">
+              <div className="p-2 text-center">
                 <h3 className="text-xl font-bold text-black">{productName}</h3>
               </div>
             </Link>
             
             {/* Navigation with Arrows, Plus Button, and Dots */}
             {products.length > 1 && (
-              <div className="flex items-center justify-between px-4 pb-4">
+              <div className="flex items-center justify-between px-2 pb-4">
                 {/* Left Arrow */}
                 <button
                   onClick={prevSlide}
@@ -212,15 +258,15 @@ export default function ProductCarousel({ slice }) {
                 </button>
                 
                 {/* Center Section with Dots and Plus Button */}
-                <div className="flex items-center justify-center flex-1 mx-4 relative">
+                <div className="flex items-center justify-center flex-1 relative">
                   {/* Left Dots - Evenly spread */}
-                  <div className="flex space-x-3 mr-12">
+                  <div className="flex">
                     {products.slice(0, Math.ceil(products.length / 2)).map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setCurrentIndex(idx)}
                         className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                          idx === currentIndex ? 'bg-black scale-110' : 'bg-gray-300'
+                          idx === currentIndex ? 'bg-black scale-110 space-x-4' : 'bg-gray-300'
                         }`}
                         aria-label={`Go to slide ${idx + 1}`}
                       />
@@ -238,7 +284,7 @@ export default function ProductCarousel({ slice }) {
                   </button>
                   
                   {/* Right Dots - Evenly spread */}
-                  <div className="flex space-x-3 ml-12">
+                  <div className="flex">
                     {products.slice(Math.ceil(products.length / 2)).map((_, idx) => (
                       <button
                         key={Math.ceil(products.length / 2) + idx}

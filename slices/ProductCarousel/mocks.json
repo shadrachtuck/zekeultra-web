@@ -1,0 +1,46 @@
+{
+  "id": "product_carousel",
+  "slice_type": "product_carousel",
+  "slice_label": null,
+  "version": "mock",
+  "variation": "default",
+  "primary": {
+    "section_title": "Featured Products",
+    "use_stripe_products": true,
+    "show_only_featured": true,
+    "featured_product_names": [
+      {
+        "product_name": "Babel T-Shirts"
+      },
+      {
+        "product_name": "Speak To The Jungle In The Hills CD"
+      }
+    ]
+  },
+  "items": [
+    {
+      "product_id": "prod_123456789",
+      "product_name": "Babel T-Shirts",
+      "product_description": "Limited edition Babel t-shirts",
+      "product_image": {
+        "url": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop",
+        "alt": "Babel T-Shirts"
+      },
+      "product_price": 2500,
+      "stripe_price_id": "price_123456789",
+      "currency": "usd"
+    },
+    {
+      "product_id": "prod_987654321",
+      "product_name": "Speak To The Jungle In The Hills CD",
+      "product_description": "Limited edition CD",
+      "product_image": {
+        "url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
+        "alt": "Speak To The Jungle In The Hills CD"
+      },
+      "product_price": 1500,
+      "stripe_price_id": "price_987654321",
+      "currency": "usd"
+    }
+  ]
+} 

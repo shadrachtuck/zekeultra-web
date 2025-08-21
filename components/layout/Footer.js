@@ -8,10 +8,10 @@ export default async function Footer() {
     const settings = await client.getSingle('site_settings');
     
     return (
-      <footer className="py-4 mt-8 px-4 border-t">
-        <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="md:mb-0">
+      <footer className="py-4 mt-8 px-2 border-t ">
+        <div className="container mx-auto flex flex-col md:flex-row justify-center items-center">
+          {/* //<div className="flex flex-col md:flex-row justify-center items-center"> */}
+            <div className="md:mb-0 text-sm text-gray-500">
               © ZekeUltra; Mishap Creative Works {new Date().getFullYear()}
             </div>
             
@@ -30,14 +30,14 @@ export default async function Footer() {
                 ))}
               </div>
             )}
-          </div>
+          {/* //</div> */}
         </div>
       </footer>
     );
   } catch (error) {
     // Fallback footer if Prismic data is not available
     return (
-      <footer className="py-8 mt-8 px-4 border-t">
+      <footer className="py-8 mt-8 px-2 border-t">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">

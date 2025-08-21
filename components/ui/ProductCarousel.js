@@ -5,13 +5,13 @@ import Link from 'next/link';
 
 const ArrowLeft = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M15 19L8 12L15 5" stroke="#fff" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="square"/>
+    <path d="M1 19L8 12L15 5" stroke="#fff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="square"/>
   </svg>
 );
 
 const ArrowRight = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M9 5L16 12L9 19" stroke="#fff" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="square"/>
+    <path d="M1 5L16 12L9 19" stroke="#fff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="square"/>
   </svg>
 );
 
@@ -63,7 +63,7 @@ export default function ProductCarousel({ products }) {
 
   return (
     <section className="w-full py-12">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-2">
               <div className="max-w-3xl mx-auto">
         {/* Product Card */}
         <div className="bg-white rounded-lg border border-black overflow-hidden w-full">
@@ -82,14 +82,14 @@ export default function ProductCarousel({ products }) {
                 </div>
               )}
             </div>
-            <div className="p-4 text-center">
+            <div className="p-2 text-center">
               <h3 className="text-xl font-bold text-black mb-3">{product.name}</h3>
             </div>
           </Link>
           
           {/* Navigation with Arrows, Plus Button, and Dots */}
           {products.length > 1 && (
-            <div className="flex items-center justify-between px-4 py-4">
+            <div className="flex items-center justify-between px-2 py-4">
               {/* Left Arrow */}
               <button
                 onClick={prevSlide}

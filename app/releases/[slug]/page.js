@@ -3,7 +3,7 @@ import { PrismicNextImage } from '@prismicio/next';
 import { PrismicRichText } from '@prismicio/react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import DrawerXIcon from '../../../components/ui/DrawerXIcon';
+import CloseIcon from '../../../components/ui/CloseIcon';
 import Button from '../../../components/ui/Button';
 
 // Helper function to generate slug from title (same as in FeaturedReleases)
@@ -73,9 +73,9 @@ export default async function ReleasePage({ params }) {
             
             <div>
               <div className="flex justify-between mb-8">
-                <h1 className="text-3xl font-bold pb-4">{release.data.title}</h1>
-                <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity mt-2">
-                  <DrawerXIcon />
+                <h1 className="text-2xl font-bold pb-4">{release.data.title}</h1>
+                <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity">
+                  <CloseIcon className="w-8 h-8" />
                 </Link>
               </div>
               

@@ -82,7 +82,7 @@ export default function ContactForm({
           maxLength={100}
           value={formData.name}
           onChange={handleInputChange}
-          className="w-full px-4 py-2 bg-transparent text-black border-b border-black focus:outline-none focus:border-black transition-colors duration-200" 
+          className="w-full px-2 py-2 bg-transparent text-black border-b border-black focus:outline-none focus:border-black transition-colors duration-200" 
         />
       </div>
       
@@ -98,7 +98,7 @@ export default function ContactForm({
           maxLength={254}
           value={formData.email}
           onChange={handleInputChange}
-          className="w-full px-4 py-2 bg-transparent text-black border-b border-black focus:outline-none focus:border-black transition-colors duration-200" 
+          className="w-full px-2 py-2 bg-transparent text-black border-b border-black focus:outline-none focus:border-black transition-colors duration-200" 
         />
       </div>
       
@@ -114,7 +114,7 @@ export default function ContactForm({
           maxLength={200}
           value={formData.subject}
           onChange={handleInputChange}
-          className="w-full px-4 py-2 bg-transparent text-black border-b border-black focus:outline-none focus:border-black transition-colors duration-200" 
+          className="w-full px-2 py-2 bg-transparent text-black border-b border-black focus:outline-none focus:border-black transition-colors duration-200" 
         />
       </div>
       
@@ -130,13 +130,13 @@ export default function ContactForm({
           maxLength={2000}
           value={formData.message}
           onChange={handleInputChange}
-          className="w-full px-4 py-2 bg-transparent text-black border-b border-black focus:outline-none focus:border-black transition-colors duration-200" 
+          className="w-full px-2 py-2 bg-transparent text-black border-b border-black focus:outline-none focus:border-black transition-colors duration-200" 
         />
       </div>
       
       {/* Status Messages */}
       {submitStatus && (
-        <div className={`p-4 rounded ${
+        <div className={`p-2 rounded ${
           submitStatus === 'success' 
             ? 'bg-green-900 text-green-100 border border-green-700' 
             : 'bg-red-900 text-red-100 border border-red-700'

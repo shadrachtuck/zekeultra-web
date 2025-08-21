@@ -10,8 +10,8 @@ export default async function ReleasesPage() {
     const releasesPage = await client.getSingle('releases');
 
     return (
-      <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold pb-4">Releases</h1>
+      <div className="container mx-auto py-12 px-2">
+        <h1 className="text-2xl font-bold pb-4">Releases</h1>
         
         {releasesPage ? (
           <SliceZone slices={releasesPage.data.slices} components={components} />
@@ -25,8 +25,8 @@ export default async function ReleasesPage() {
   } catch (error) {
     console.error('Error fetching releases page:', error);
     return (
-      <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold pb-4">Releases</h1>
+      <div className="container mx-auto py-12 px-2">
+        <h1 className="text-2xl font-bold pb-4">Releases</h1>
         
         <div className="text-center py-12">
           <p className="text-xl">Releases will be available soon.</p>

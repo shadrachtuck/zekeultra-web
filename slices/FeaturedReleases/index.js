@@ -14,10 +14,10 @@ const generateSlug = (title) => {
 
 export default function FeaturedReleases({ slice }) {
   return (
-    <section className="py-16 px-4">
+    <section className="py-16 px-2">
       <div className="max-w-6xl mx-auto">
         {slice.primary.section_title && (
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 pb-2">
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-12 pb-2">
             {slice.primary.section_title}
           </h2>
         )}
@@ -34,7 +34,7 @@ export default function FeaturedReleases({ slice }) {
 
             return (
               <div key={idx} className="group">
-                <div className="border border-black bg-transparent p-4">
+                <div className="border border-black bg-transparent p-2">
                   <Link href={`/releases/${slug}`} className="block hover:opacity-90 transition-opacity">
                     <div className="relative aspect-square mb-4 overflow-hidden rounded-lg">
                       <PrismicNextImage

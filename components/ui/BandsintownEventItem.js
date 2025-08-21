@@ -91,7 +91,7 @@ export default function BandsintownEventItem({ event, isPast = false }) {
               href={formattedEvent.ticketUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`px-4 py-2 font-medium transition-colors ${
+              className={`px-2 py-2 font-medium transition-colors ${
                 isPast 
                   ? 'bg-gray-600 text-gray-300 cursor-not-allowed' 
                   : 'bg-white text-black hover:bg-gray-100'

@@ -4,7 +4,7 @@ import { PrismicNextImage } from '@prismicio/next';
 export default function ReleaseCard({ slice }) {
   const release = slice.primary;
   return (
-    <div className="border p-4">
+    <div className="border p-2">
       <div className="relative aspect-square mb-4">
         <PrismicNextImage field={release.cover_image} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 50vw" />
       </div>

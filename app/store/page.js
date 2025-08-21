@@ -2,7 +2,7 @@ import { createClient } from '../../lib/prismic';
 import { createStripeInstance } from '../../lib/stripe';
 import ProductCard from '../../components/ui/ProductCard';
 import StoreClientWrapper from '../../components/store/StoreClientWrapper';
-import DrawerXIcon from '../../components/ui/DrawerXIcon';
+import CloseIcon from '../../components/ui/CloseIcon';
 import Link from 'next/link';
 
 export default async function StorePage() {
@@ -55,17 +55,20 @@ export default async function StorePage() {
       });
 
     return (
-      <StoreClientWrapper>
-        <main className="min-h-screen">
-          <div className="container mx-auto py-20 px-4">
-            <div className="flex justify-between items-start mb-6">
-              <h1 className="text-3xl font-bold">Store</h1>
-              <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity mt-2">
-                <DrawerXIcon />
+              <StoreClientWrapper>
+          <main className="min-h-screen">
+            <div className="container mx-auto py-12 px-2 md:py-20 md:px-0">
+            <div className="flex justify-between items-start mb-2">
+              {/* <h1 className="text-2xl font-bold">Store</h1> */}
+              <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full px-2">
+                All merch
+              </div>
+              <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity">
+                <CloseIcon className="w-8 h-8" />
               </Link>
             </div>
             {productList.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {productList.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -86,13 +89,16 @@ export default async function StorePage() {
     console.error('Error loading store:', error);
     
     // Show a helpful error message
-    return (
-      <main className="min-h-screen">
-        <div className="container mx-auto py-20 px-4">
-          <div className="flex justify-between items-start mb-6">
-            <h1 className="text-3xl font-bold">Store</h1>
-            <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity mt-2">
-              <DrawerXIcon />
+          return (
+        <main className="min-h-screen">
+          <div className="container mx-auto py-12 px-2 md:py-20 md:px-0">
+          <div className="flex justify-between items-start mb-2">
+            {/* <h1 className="text-2xl font-bold">Store</h1> */}
+            <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full px-2">
+                All merch
+              </div>
+            <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity">
+              <CloseIcon className="w-8 h-8" />
             </Link>
           </div>
           <div className="text-center py-12">

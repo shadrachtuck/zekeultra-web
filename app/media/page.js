@@ -10,8 +10,8 @@ export default async function MediaPage() {
     
     return (
       <main className="min-h-screen  text-black">
-        <div className="container mx-auto py-12 px-4">
-          <h1 className="text-3xl font-bold  pb-4">Media</h1>
+        <div className="container mx-auto py-12 px-2">
+          <h1 className="text-2xl font-bold  pb-4">Media</h1>
           <SliceZone slices={page.data.slices} components={components} />
         </div>
       </main>
@@ -20,8 +20,8 @@ export default async function MediaPage() {
     console.error('[MediaPage] Error loading media page:', error);
     return (
       <main className="min-h-screen  text-black">
-        <div className="container mx-auto py-12 px-4">
-          <h1 className="text-3xl font-bold  pb-4">Media</h1>
+        <div className="container mx-auto py-12 px-2">
+          <h1 className="text-2xl font-bold  pb-4">Media</h1>
           <p>Media page content will be managed through Prismic CMS.</p>
         </div>
       </main>

@@ -29,10 +29,10 @@ export default async function AboutPage() {
         )}
 
         
-        <div className="container mx-auto py-12 px-4">
+        <div className="container mx-auto py-12 px-2">
           <div className="max-w-4xl mx-auto">
             {/* Bio Section */}
-            <h1 className="text-3xl font-bold mb-8 pb-4">{page.data.page_title || 'About'}</h1>
+            <h1 className="text-2xl font-bold mb-8 pb-4">{page.data.page_title || 'About'}</h1>
             {page.data.bio && (
               <div className="mb-16">
                 <div className="prose prose-lg max-w-none text-black">
@@ -54,7 +54,7 @@ export default async function AboutPage() {
     return (
       <div className="container mx-auto page-container">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">About Page</h1>
+          <h1 className="text-2xl font-bold mb-8">About Page</h1>
           <div className="prose prose-lg max-w-none text-black">
             <p>About page content will be managed through Prismic CMS.</p>
             <p>Please create an &quot;about_page&quot; document in your Prismic repository to display content here.</p>

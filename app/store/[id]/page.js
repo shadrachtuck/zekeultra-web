@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useCart } from '../../../components/store/CartContext';
 import { formatPrice } from '../../../lib/stripe';
 import Button from '../../../components/ui/Button';
-import DrawerXIcon from '../../../components/ui/DrawerXIcon';
+import CloseIcon from '../../../components/ui/CloseIcon';
 import Link from 'next/link';
 import { createStripeInstance } from '../../../lib/stripe';
 import { createClient } from '../../../lib/prismic';
@@ -94,7 +94,7 @@ export default function ProductPage({ params }) {
   if (loading) {
     return (
       <main className="min-h-screen">
-        <div className="container mx-auto py-20 px-4">
+        <div className="container mx-auto py-20 px-2">
           <div className="max-w-2xl mx-auto text-center">
             <p>Loading product...</p>
           </div>
@@ -106,9 +106,9 @@ export default function ProductPage({ params }) {
   if (!product) {
     return (
       <main className="min-h-screen">
-        <div className="container mx-auto py-20 px-4">
+        <div className="container mx-auto py-20 px-2">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="text-3xl font-bold mb-8 pb-4">Product Not Found</h1>
+            <h1 className="text-2xl font-bold mb-8 pb-4">Product Not Found</h1>
             <p className="text-xl text-gray-300 mb-8">
               The product you&apos;re looking for doesn&apos;t exist.
             </p>
@@ -125,11 +125,10 @@ export default function ProductPage({ params }) {
   }
 
   return (
-    <main className="min-h-screen">
-      <div className="container mx-auto py-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+    <main className="min-h-screen flex items-center justify-center">
+      <div className="mx-auto px-2 my-10 pt-18">
+        <div className="w-full mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div>
               <div className="aspect-square relative border border-black">
                 {product.images?.[0] ? (
@@ -137,7 +136,6 @@ export default function ProductPage({ params }) {
                     src={product.images[0]}
                     alt={product.name}
                     className="w-full h-full object-cover"
-                    priority
                   />
                 ) : (
                   <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -148,28 +146,27 @@ export default function ProductPage({ params }) {
             </div>
             
             <div>
-              <div className="flex justify-between mb-6">
-                <h1 className="text-3xl font-bold">{product.name}</h1>
-                <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity mt-2">
-                  <DrawerXIcon />
+              <div className="flex justify-between">
+                <h1 className="text-2xl font-bold">{product.name}</h1>
+                <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity">
+                  <CloseIcon className="w-8 h-8" />
                 </Link>
               </div>
               
-              <div className="text-lg opacity-75 mb-6">
+              <div className="text-lg opacity-75">
                 {formatPrice(product.price, product.currency)}
               </div>
               
-              <div className="mb-8">
+              <div className="mb-1">
                 <p className="text-black">{product.description}</p>
               </div>
               
-              <div className="space-y-4">
-                <h2 className="text-xl font-medium mb-2">Purchase</h2>
-                <div className="flex flex-wrap gap-3">
+              <div className="space-y-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     onClick={handleAddToCart}
                     disabled={!product.price}
-                    className="w-fit p-3"
+                    className="w-fit px-2 py-1"
                   >
                     Add to Cart
                   </Button>

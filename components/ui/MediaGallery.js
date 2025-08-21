@@ -39,7 +39,7 @@ export default function MediaGallery({ items = [] }) {
           )}
           
           {item.media_type === 'Audio' && item.embed_code && (
-            <div className="p-4 border rounded-lg">
+            <div className="p-2 border rounded-lg">
               <div dangerouslySetInnerHTML={{ __html: item.embed_code }} />
             </div>
           )}

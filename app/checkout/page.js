@@ -5,7 +5,7 @@ import { formatPrice } from '../../lib/stripe';
 import CheckoutForm from '../../components/ui/CheckoutForm';
 import Button from '../../components/ui/Button';
 import Link from 'next/link';
-import DrawerXIcon from '../../components/ui/DrawerXIcon';
+import CloseIcon from '../../components/ui/CloseIcon';
 
 export default function CheckoutPage() {
   const [orderComplete, setOrderComplete] = useState(false);
@@ -34,14 +34,14 @@ export default function CheckoutPage() {
   if (cart.items.length === 0 && !orderComplete) {
     return (
       <main className="min-h-screen">
-        <div className="container mx-auto py-20 px-4">
+        <div className="container mx-auto py-20 px-2">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="text-3xl font-bold mb-8 pb-4">Checkout</h1>
+            <h1 className="text-2xl font-bold mb-8 pb-4">Checkout</h1>
             <p className="text-xl text-gray-300 mb-8">
               Your cart is empty. Please add some items to your cart before checkout.
             </p>
             <a
-              href="/#store"
+              href="/store"
               className="inline-block px-8 py-3 bg-white text-black font-semibold hover:bg-black hover:text-white transition-colors duration-200"
             >
               Continue Shopping
@@ -55,14 +55,14 @@ export default function CheckoutPage() {
   if (orderComplete) {
     return (
       <main className="min-h-screen">
-        <div className="container mx-auto py-20 px-4">
+        <div className="container mx-auto py-20 px-2">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="text-3xl font-bold mb-8 pb-4">Order Complete!</h1>
+            <h1 className="text-2xl font-bold mb-8 pb-4">Order Complete!</h1>
             <p className="text-xl text-gray-300 mb-8">
               Thank you for your purchase! You will receive a confirmation email shortly.
             </p>
             <a
-              href="/#store"
+              href="/store"
               className="inline-block px-8 py-3 bg-white text-black font-semibold hover:bg-black hover:text-white transition-colors duration-200"
             >
               Continue Shopping
@@ -75,10 +75,10 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen">
-      <div className="container mx-auto py-20 px-4">
+      <div className="container mx-auto py-20 px-2">
         <div className="max-w-4xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold pb-4">Checkout</h1>
+            <h1 className="text-2xl font-bold pb-4">Checkout</h1>
             <div className="flex items-center gap-4">
               <button
                 onClick={handleStartOver}
@@ -87,7 +87,7 @@ export default function CheckoutPage() {
                 Start Over
               </button>
               <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity">
-                <DrawerXIcon />
+                <CloseIcon className="w-8 h-8" />
               </Link>
             </div>
           </div>

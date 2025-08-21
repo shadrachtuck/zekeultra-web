@@ -65,7 +65,7 @@ export default async function Home() {
   }
 
   return (
-    <main className="min-h-screen pt-20">
+    <main className="pt-20">
       {/* SLICE ZONE */}
       <SliceZone 
         slices={homepage?.data?.slices || []} 

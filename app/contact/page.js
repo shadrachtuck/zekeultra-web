@@ -11,7 +11,7 @@ export default async function ContactPage() {
     return (
       <div className="container mx-auto page-container">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8 pb-4">{data.contact_title || 'Contact'}</h1>
+          <h1 className="text-2xl font-bold mb-8 pb-4">{data.contact_title || 'Contact'}</h1>
 
           <ContactForm 
             contactName={data.contact_name || 'Your Name'}
@@ -48,9 +48,9 @@ export default async function ContactPage() {
   } catch (error) {
     console.error('[ContactPage] Error fetching contact page:', error);
     return (
-      <div className="container mx-auto py-12 px-4">
+      <div className="container mx-auto py-12 px-2">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8 pb-4">Contact</h1>
+          <h1 className="text-2xl font-bold mb-8 pb-4">Contact</h1>
           <p>Contact page content will be managed through Prismic CMS.</p>
         </div>
       </div>

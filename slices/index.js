@@ -11,8 +11,8 @@ export const components = {
   hero_section: dynamic(() => import("./HeroSection")),
   instagram_gallery: dynamic(() => import("./InstagramGallery")),
   media_gallery: dynamic(() => import("./MediaGallery")),
+  product_carousel: dynamic(() => import("./ProductCarousel")),
   release_card: dynamic(() => import("./ReleaseCard")),
   upcoming_events: dynamic(() => import("./UpcomingEvents")),
   video_carousel: dynamic(() => import("./VideoCarousel")),
-  product_carousel: dynamic(() => import("./ProductCarousel")),
 };

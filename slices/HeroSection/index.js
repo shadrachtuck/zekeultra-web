@@ -99,7 +99,7 @@ export default function HeroSection({ slice }) {
         {/* Background Video */}
         
         {/* Content */}
-        <div className="hero-content text-center px-4 max-w-4xl mx-auto bg-transparent">
+        <div className="hero-content text-center px-2 max-w-4xl mx-auto bg-transparent">
           {title && (
             <h1 className="font-brigends text-hero font-bold tracking-tight mb-6 leading-none">
               {title}

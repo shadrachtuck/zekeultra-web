@@ -89,7 +89,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-gray-800 p-4 rounded">
+      <div className="bg-gray-800 p-2 rounded">
         <CardElement 
           options={cardElementOptions} 
           onChange={handleCardChange}

@@ -26,6 +26,30 @@
             "default_value": true,
             "placeholder": "Automatically pull products from Stripe"
           }
+        },
+        "show_only_featured": {
+          "type": "Boolean",
+          "config": {
+            "label": "Show Only Featured Products",
+            "default_value": false,
+            "placeholder": "Filter to show only products specified in this slice"
+          }
+        },
+        "featured_product_names": {
+          "type": "Group",
+          "config": {
+            "label": "Featured Product Names",
+            "repeat": true,
+            "fields": {
+              "product_name": {
+                "type": "Text",
+                "config": {
+                  "label": "Product Name",
+                  "placeholder": "e.g., Babel T-Shirts, Speak To The Jungle In The Hills CD"
+                }
+              }
+            }
+          }
         }
       },
       "items": {
