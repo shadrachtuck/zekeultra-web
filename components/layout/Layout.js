@@ -1,16 +1,21 @@
 import Header from './Header';
-import Footer from './Footer';
 import CartProvider from './CartProvider';
+import SocialMediaBar from '../ui/SocialMediaBar';
 // import BackgroundVideo from '../ui/BackgroundVideo';
 
 export default function Layout({ children }) {
   return (
     <CartProvider>
-      <Header />
-      {/* <BackgroundVideo /> */}
-      <main className="flex-1 z-10 bg-transparent relative">
-        {children}</main>
-      <Footer />
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        {/* <BackgroundVideo /> */}
+        <main className="flex-1 z-10 bg-transparent relative flex items-center">
+          <div className="w-full">
+            {children}
+          </div>
+        </main>
+        <SocialMediaBar />
+      </div>
     </CartProvider>
   );
 } 

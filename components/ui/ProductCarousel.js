@@ -5,13 +5,13 @@ import Link from 'next/link';
 
 const ArrowLeft = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M1 19L8 12L15 5" stroke="#fff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="square"/>
+    <path d="M15 19L8 12L15 5" stroke="#fff" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="square"/>
   </svg>
 );
 
 const ArrowRight = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M1 5L16 12L9 19" stroke="#fff" strokeWidth="2" strokeLinecap="square" strokeLinejoin="square"/>
+    <path d="M9 5L16 12L9 19" stroke="#fff" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="square"/>
   </svg>
 );
 
@@ -21,8 +21,15 @@ const PlusIcon = () => (
   </svg>
 );
 
+const CheckmarkIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/>
+  </svg>
+);
+
 export default function ProductCarousel({ products }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showCheckmark, setShowCheckmark] = useState(false);
   const { dispatch } = useCart();
 
   const nextSlide = () => {
@@ -36,6 +43,13 @@ export default function ProductCarousel({ products }) {
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    console.log('Adding to cart:', product);
+    console.log('Product price:', product.price);
+    
+    setShowCheckmark(true);
+    
+    // Add to cart immediately but show checkmark animation
     dispatch({
       type: 'ADD_ITEM',
       item: {
@@ -48,6 +62,11 @@ export default function ProductCarousel({ products }) {
         currency: product.currency,
       },
     });
+    
+    // Reset checkmark after animation
+    setTimeout(() => {
+      setShowCheckmark(false);
+    }, 1200);
   };
 
   if (!products || products.length === 0) {
@@ -60,10 +79,14 @@ export default function ProductCarousel({ products }) {
 
   const product = products[currentIndex];
   const productSlug = product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  
+  console.log('Current product:', product);
+  console.log('Product price:', product.price);
+  console.log('Button disabled:', !product.price);
 
   return (
     <section className="w-full py-12">
-      <div className="container mx-auto px-2">
+      <div className="container mx-auto">
               <div className="max-w-3xl mx-auto">
         {/* Product Card */}
         <div className="bg-white rounded-lg border border-black overflow-hidden w-full">
@@ -83,24 +106,24 @@ export default function ProductCarousel({ products }) {
               )}
             </div>
             <div className="p-2 text-center">
-              <h3 className="text-xl font-bold text-black mb-3">{product.name}</h3>
+              <h3 className="text-xl font-bold text-black">{product.name}</h3>
             </div>
           </Link>
           
           {/* Navigation with Arrows, Plus Button, and Dots */}
-          {products.length > 1 && (
-            <div className="flex items-center justify-between px-2 py-4">
+          {products.length > 1 ? (
+            <div className="flex items-center justify-between">
               {/* Left Arrow */}
               <button
                 onClick={prevSlide}
-                className="w-8 bg-black flex items-center justify-center focus:outline-none hover:bg-gray-800 transition-colors p-1"
+                className="w-8 bg-black flex items-center justify-center focus:outline-none hover:bg-gray-800 transition-colors"
                 aria-label="Previous"
               >
                 <ArrowLeft />
               </button>
               
               {/* Center Section with Dots and Plus Button */}
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center">
                 {/* Left Dots */}
                 <div className="flex space-x-1">
                   {products.slice(0, Math.ceil(products.length / 2)).map((_, idx) => (
@@ -122,7 +145,13 @@ export default function ProductCarousel({ products }) {
                   className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Add to cart"
                 >
-                  <PlusIcon />
+                  {showCheckmark ? (
+                    <div className="animate-pulse">
+                      <CheckmarkIcon />
+                    </div>
+                  ) : (
+                    <PlusIcon />
+                  )}
                 </button>
                 
                 {/* Right Dots */}
@@ -143,10 +172,27 @@ export default function ProductCarousel({ products }) {
               {/* Right Arrow */}
               <button
                 onClick={nextSlide}
-                className="w-8 bg-black flex items-center justify-center focus:outline-none hover:bg-gray-800 transition-colors p-1"
+                className="w-8 bg-black flex items-center justify-center focus:outline-none hover:bg-gray-800 transition-colors"
                 aria-label="Next"
               >
                 <ArrowRight />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center">
+              <button
+                onClick={(e) => handleAddToCart(e, product)}
+                disabled={!product.price}
+                className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Add to cart"
+              >
+                {showCheckmark ? (
+                  <div className="animate-pulse">
+                    <CheckmarkIcon />
+                  </div>
+                ) : (
+                  <PlusIcon />
+                )}
               </button>
             </div>
           )}

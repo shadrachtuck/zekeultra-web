@@ -65,12 +65,12 @@ export default async function Home() {
   }
 
   return (
-    <main className="pt-20">
+    <div className="py-16 md:py-24">
       {/* SLICE ZONE */}
       <SliceZone 
         slices={homepage?.data?.slices || []} 
         components={components}
       />
-    </main>
+    </div>
   );
 }

@@ -33,18 +33,18 @@ export default function CheckoutPage() {
 
   if (cart.items.length === 0 && !orderComplete) {
     return (
-      <main className="min-h-screen">
-        <div className="container mx-auto py-20 px-2">
+      <main className="min-h-screen flex items-center">
+        <div className="container mx-auto px-2 py-20">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="text-2xl font-bold mb-8 pb-4">Checkout</h1>
+            <h3 className="font-bold mb-8">Checkout</h3>
             <p className="text-xl text-gray-300 mb-8">
               Your cart is empty. Please add some items to your cart before checkout.
             </p>
             <a
-              href="/store"
+              href="/"
               className="inline-block px-8 py-3 bg-white text-black font-semibold hover:bg-black hover:text-white transition-colors duration-200"
             >
-              Continue Shopping
+              Continue shopping
             </a>
           </div>
         </div>
@@ -54,8 +54,8 @@ export default function CheckoutPage() {
 
   if (orderComplete) {
     return (
-      <main className="min-h-screen">
-        <div className="container mx-auto py-20 px-2">
+      <main className="min-h-screen flex items-center">
+        <div className="container mx-auto px-2 py-20">
           <div className="max-w-2xl mx-auto text-center">
             <h1 className="text-2xl font-bold mb-8 pb-4">Order Complete!</h1>
             <p className="text-xl text-gray-300 mb-8">
@@ -65,7 +65,7 @@ export default function CheckoutPage() {
               href="/store"
               className="inline-block px-8 py-3 bg-white text-black font-semibold hover:bg-black hover:text-white transition-colors duration-200"
             >
-              Continue Shopping
+              Continue shopping
             </a>
           </div>
         </div>
@@ -74,17 +74,17 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="min-h-screen">
-      <div className="container mx-auto py-20 px-2">
+    <div className="min-h-screen">
+      <div className="container mx-auto px-2 mt-16 pb-24">
         <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-2xl font-bold pb-4">Checkout</h1>
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-bold">Checkout</h3>
             <div className="flex items-center gap-4">
               <button
                 onClick={handleStartOver}
-                className="text-black hover:text-gray-600 transition-colors font-medium"
+                className="text-black hover:text-gray-600 transition-colors font-medium underline"
               >
-                Start Over
+                Start over
               </button>
               <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity">
                 <CloseIcon className="w-8 h-8" />
@@ -92,13 +92,13 @@ export default function CheckoutPage() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Order Summary */}
             <div>
-              <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
+              <h4 className="font-bold mb-6">Order Summary</h4>
               <div className="space-y-4 mb-6">
                 {cart.items.map(item => (
-                  <div key={item.id} className="flex justify-between items-start pb-4 border-b border-white/20">
+                  <div key={item.id} className="flex justify-between items-start border-b border-white/20">
                     <div className="flex items-start gap-4 flex-1">
                       {item.image && (
                         <img src={item.image} alt={item.name} className="w-16 h-16 object-cover" />
@@ -152,9 +152,9 @@ export default function CheckoutPage() {
               </div>
             </div>
             
-            {/* Payment Form */}
+            {/* Shipping & Payment Form */}
             <div>
-              <h2 className="text-2xl font-bold mb-6">Payment Information</h2>
+              <h4 className="font-bold mb-6">Shipping & Payment</h4>
               <CheckoutForm 
                 amount={total} 
                 onSuccess={handlePaymentSuccess} 
@@ -164,6 +164,6 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 } 

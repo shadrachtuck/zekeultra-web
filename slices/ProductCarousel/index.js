@@ -25,6 +25,12 @@ const PlusIcon = () => (
   </svg>
 );
 
+const CheckmarkIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor"/>
+  </svg>
+);
+
 const ViewStoreArrow = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M5 12H19M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="square"/>
@@ -35,6 +41,7 @@ export default function ProductCarousel({ slice }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showCheckmark, setShowCheckmark] = useState(false);
   const { dispatch } = useCart();
 
   // Check if we should use Stripe products or manual products
@@ -155,6 +162,9 @@ export default function ProductCarousel({ slice }) {
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    setShowCheckmark(true);
+    
     dispatch({
       type: 'ADD_ITEM',
       item: {
@@ -167,6 +177,11 @@ export default function ProductCarousel({ slice }) {
         currency: product.currency || 'usd',
       },
     });
+    
+    // Reset checkmark after animation
+    setTimeout(() => {
+      setShowCheckmark(false);
+    }, 1200);
   };
 
   if (loading) {
@@ -181,9 +196,11 @@ export default function ProductCarousel({ slice }) {
     return (
       <div className="text-center py-12">
         <p className="text-gray-500">
-          {showOnlyFeatured 
-            ? "No featured products found. Check your site settings for featured product names."
-            : "No products available."
+          {useStripeProducts 
+            ? "No products available. Please configure Stripe API key in site settings or add manual products."
+            : showOnlyFeatured 
+              ? "No featured products found. Check your site settings for featured product names."
+              : "No products available."
           }
         </p>
       </div>
@@ -203,24 +220,26 @@ export default function ProductCarousel({ slice }) {
 
   return (
     <StoreClientWrapper>
-              <section className="w-full pt-12">
+              <section className="w-full">
           <div className="container mx-auto px-2">
-            <div className="pb-4">
-              <div className="flex justify-between items-center">
-                {showOnlyFeatured && (
-                  <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full px-2">
-                    Featured merch
-                  </div>
-                )}
-                <Link 
-                  href="/store" 
-                  className="flex items-center gap-2 text-black hover:text-gray-700 transition-colors font-medium"
-                >
-                  View store
-                  <ViewStoreArrow />
-                </Link>
+            {products.length > 1 && (
+              <div className="pb-4">
+                <div className="flex justify-between items-center">
+                  {showOnlyFeatured && (
+                    <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full px-2">
+                      Featured merch
+                    </div>
+                  )}
+                  <Link 
+                    href="/store" 
+                    className="flex items-center gap-2 text-black hover:text-gray-700 transition-colors font-medium"
+                  >
+                    View store
+                    <ViewStoreArrow />
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
             
             <div className="mx-auto">
             {/* Product Card */}
@@ -246,7 +265,7 @@ export default function ProductCarousel({ slice }) {
             </Link>
             
             {/* Navigation with Arrows, Plus Button, and Dots */}
-            {products.length > 1 && (
+            {products.length > 1 ? (
               <div className="flex items-center justify-between px-2 pb-4">
                 {/* Left Arrow */}
                 <button
@@ -280,7 +299,13 @@ export default function ProductCarousel({ slice }) {
                     className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     aria-label="Add to cart"
                   >
-                    <PlusIcon />
+                    {showCheckmark ? (
+                      <div className="animate-pulse">
+                        <CheckmarkIcon />
+                      </div>
+                    ) : (
+                      <PlusIcon />
+                    )}
                   </button>
                   
                   {/* Right Dots - Evenly spread */}
@@ -305,6 +330,24 @@ export default function ProductCarousel({ slice }) {
                   aria-label="Next"
                 >
                   <ArrowRight />
+                </button>
+              </div>
+            ) : (
+              // Single product - just show centered add to cart button
+              <div className="flex items-center justify-center px-2 pb-4">
+                <button
+                  onClick={(e) => handleAddToCart(e, product)}
+                  disabled={!productPrice}
+                  className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Add to cart"
+                >
+                  {showCheckmark ? (
+                    <div className="animate-pulse">
+                      <CheckmarkIcon />
+                    </div>
+                  ) : (
+                    <PlusIcon />
+                  )}
                 </button>
               </div>
             )}

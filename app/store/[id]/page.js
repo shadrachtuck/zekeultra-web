@@ -116,7 +116,7 @@ export default function ProductPage({ params }) {
               href="/#store"
               className="inline-block px-8 py-3 bg-white text-black font-semibold hover:bg-black hover:text-white transition-colors duration-200"
             >
-              Continue Shopping
+              Continue shopping
             </a>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default function ProductPage({ params }) {
                 <p className="text-black">{product.description}</p>
               </div>
               
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <div className="flex flex-wrap gap-2">
                   <Button
                     onClick={handleAddToCart}

@@ -48,7 +48,7 @@ export default function CartWidget({ onCheckout, onClose }) {
                 className="text-white hover:opacity-75 transition-opacity text-sm underline"
                 onClick={onClose}
               >
-                Continue Shopping
+                Continue shopping
               </a>
             </div>
           ) : (

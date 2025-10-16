@@ -4,7 +4,7 @@ import { createPaymentIntent } from '../../../lib/stripe';
 
 export async function POST(request) {
   try {
-    const { amount, currency = 'usd' } = await request.json();
+    const { amount, currency = 'usd', shipping } = await request.json();
 
     if (!amount) {
       return NextResponse.json(
@@ -27,8 +27,33 @@ export async function POST(request) {
       );
     }
 
-    // Create a PaymentIntent with the order amount and currency
-    const paymentIntent = await createPaymentIntent(amount, currency, stripeApiKey);
+    // Create a PaymentIntent with the order amount, currency, and shipping info
+    const paymentIntentOptions = {
+      amount,
+      currency,
+    };
+
+    // Add shipping information if provided
+    if (shipping) {
+      paymentIntentOptions.shipping = {
+        name: shipping.name,
+        address: {
+          line1: shipping.address.line1,
+          line2: shipping.address.line2,
+          city: shipping.address.city,
+          state: shipping.address.state,
+          postal_code: shipping.address.postal_code,
+          country: shipping.address.country,
+        },
+      };
+    }
+
+    const paymentIntent = await createPaymentIntent(
+      paymentIntentOptions.amount, 
+      paymentIntentOptions.currency, 
+      stripeApiKey,
+      paymentIntentOptions.shipping
+    );
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,

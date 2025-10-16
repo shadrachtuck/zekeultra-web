@@ -20,26 +20,60 @@
           "placeholder": "Email address to receive contact form submissions"
         }
       },
-      "social_links": {
-        "type": "Group",
+      "youtube_link": {
+        "type": "Link",
         "config": {
-          "label": "social_links",
-          "repeat": true,
-          "fields": {}
+          "label": "YouTube Link",
+          "placeholder": "https://youtube.com/...",
+          "select": null
         }
       },
-      "platform": {
-        "type": "Text",
+      "spotify_link": {
+        "type": "Link",
         "config": {
-          "label": "platform",
-          "placeholder": ""
+          "label": "Spotify Link",
+          "placeholder": "https://open.spotify.com/...",
+          "select": null
         }
       },
-      "url": {
-        "type": "Text",
+      "instagram_link": {
+        "type": "Link",
         "config": {
-          "label": "url",
-          "placeholder": ""
+          "label": "Instagram Link",
+          "placeholder": "https://instagram.com/...",
+          "select": null
+        }
+      },
+      "apple_music_link": {
+        "type": "Link",
+        "config": {
+          "label": "Apple Music Link",
+          "placeholder": "https://music.apple.com/...",
+          "select": null
+        }
+      },
+      "soundcloud_link": {
+        "type": "Link",
+        "config": {
+          "label": "SoundCloud Link",
+          "placeholder": "https://soundcloud.com/...",
+          "select": null
+        }
+      },
+      "bandcamp_link": {
+        "type": "Link",
+        "config": {
+          "label": "Bandcamp Link",
+          "placeholder": "https://bandcamp.com/...",
+          "select": null
+        }
+      },
+      "tidal_link": {
+        "type": "Link",
+        "config": {
+          "label": "Tidal Link",
+          "placeholder": "https://tidal.com/...",
+          "select": null
         }
       },
       "enable_bandsintown": {

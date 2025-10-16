@@ -11,8 +11,8 @@ export default async function Footer() {
       <footer className="py-4 mt-8 px-2 border-t ">
         <div className="container mx-auto flex flex-col md:flex-row justify-center items-center">
           {/* //<div className="flex flex-col md:flex-row justify-center items-center"> */}
-            <div className="md:mb-0 text-sm text-gray-500">
-              © ZekeUltra; Mishap Creative Works {new Date().getFullYear()}
+            <div className="md:mb-0 text-sm text-gray-500 mt-4">
+              © {new Date().getFullYear()} ZekeUltra; Mishap Creative Works 
             </div>
             
             {settings.data.social_links && settings.data.social_links.length > 0 && (
@@ -40,8 +40,8 @@ export default async function Footer() {
       <footer className="py-8 mt-8 px-2 border-t">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-            © ZekeUltra; Mishap Creative Works {new Date().getFullYear()}
+            <div className="mb-4 md:mb-0 mt-4">
+            © {new Date().getFullYear()} ZekeUltra; Mishap Creative Works 
             </div>
             
             <div className="flex space-x-4">
