@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { useCart } from './CartContext';
+import { useCart, getCartItemKey } from './CartContext';
 import TrashIcon from '../ui/TrashIcon';
 import CloseIcon from '../ui/CloseIcon';
 
@@ -52,39 +52,47 @@ export default function CartWidget({ onCheckout, onClose }) {
               </a>
             </div>
           ) : (
-            cart.items.map(item => (
-              <div key={item.id} className="flex items-center gap-3 pb-2 border-b border-white/50">
-                {item.image && (
-                  <img src={item.image} alt={item.name} className="w-16 h-16 object-cover" />
-                )}
-                <div className="flex-1">
-                  <div className="font-bold text-white">{item.name}</div>
-                  <div className="text-gray-300 text-sm">${(item.price / 100).toFixed(2)}</div>
-                  <div className="flex items-center">
-                    <button
-                      className="px-2 bg-white text-black text-sm hover:opacity-75 transition-opacity"
-                      onClick={() => dispatch({ type: 'UPDATE_QUANTITY', id: item.id, quantity: Math.max(1, item.quantity - 1) })}
-                    >
-                      -
-                    </button>
-                    <span className="text-white text-sm w-6 text-center">{item.quantity}</span>
-                    <button
-                      className="px-2 bg-white text-black text-sm hover:opacity-75 transition-opacity"
-                      onClick={() => dispatch({ type: 'UPDATE_QUANTITY', id: item.id, quantity: item.quantity + 1 })}
-                    >
-                      +
-                    </button>
-                    <button
-                      className="ml-2 text-red-400 hover:text-red-300 transition-colors p-1"
-                      onClick={() => dispatch({ type: 'REMOVE_ITEM', id: item.id })}
-                      aria-label="Remove item"
-                    >
-                      <TrashIcon className="w-4 h-4" />
-                    </button>
+            cart.items.map(item => {
+              const cartItemKey = getCartItemKey(item);
+              return (
+                <div key={cartItemKey} className="flex items-center gap-3 pb-2 border-b border-white/50">
+                  {item.image && (
+                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover" />
+                  )}
+                  <div className="flex-1">
+                    <div className="font-bold text-white">{item.name}</div>
+                    {item.variant && (
+                      <div className="text-gray-400 text-xs capitalize">
+                        {item.variantType || 'Size'}: {item.variant}
+                      </div>
+                    )}
+                    <div className="text-gray-300 text-sm">${(item.price / 100).toFixed(2)}</div>
+                    <div className="flex items-center">
+                      <button
+                        className="px-2 bg-white text-black text-sm hover:opacity-75 transition-opacity"
+                        onClick={() => dispatch({ type: 'UPDATE_QUANTITY', cartItemKey, quantity: Math.max(1, item.quantity - 1) })}
+                      >
+                        -
+                      </button>
+                      <span className="text-white text-sm w-6 text-center">{item.quantity}</span>
+                      <button
+                        className="px-2 bg-white text-black text-sm hover:opacity-75 transition-opacity"
+                        onClick={() => dispatch({ type: 'UPDATE_QUANTITY', cartItemKey, quantity: item.quantity + 1 })}
+                      >
+                        +
+                      </button>
+                      <button
+                        className="ml-2 text-red-400 hover:text-red-300 transition-colors p-1"
+                        onClick={() => dispatch({ type: 'REMOVE_ITEM', cartItemKey })}
+                        aria-label="Remove item"
+                      >
+                        <TrashIcon className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
         

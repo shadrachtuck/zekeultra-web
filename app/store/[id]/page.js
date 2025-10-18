@@ -11,6 +11,7 @@ import { createClient } from '../../../lib/prismic';
 export default function ProductPage({ params }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const { dispatch } = useCart();
 
   useEffect(() => {
@@ -43,6 +44,22 @@ export default function ProductPage({ params }) {
             .filter(product => product.prices.length > 0)
             .map(product => {
               const price = product.prices[0];
+              
+              // Parse variant information from metadata
+              let variants = null;
+              let variantType = 'size'; // default
+              
+              if (product.metadata) {
+                // Check if product has variants defined in metadata
+                // Format: { variants: "S,M,L,XL" } or { variants: "Small,Medium,Large" }
+                if (product.metadata.variants) {
+                  variants = product.metadata.variants.split(',').map(v => v.trim());
+                }
+                if (product.metadata.variant_type) {
+                  variantType = product.metadata.variant_type;
+                }
+              }
+              
               return {
                 id: product.id,
                 name: product.name,
@@ -51,6 +68,9 @@ export default function ProductPage({ params }) {
                 price: price ? price.unit_amount : null,
                 priceId: price ? price.id : null,
                 currency: price ? price.currency : 'usd',
+                variants: variants,
+                variantType: variantType,
+                metadata: product.metadata,
               };
             });
 
@@ -62,6 +82,10 @@ export default function ProductPage({ params }) {
 
           if (targetProduct) {
             setProduct(targetProduct);
+            // Set default variant if product has variants
+            if (targetProduct.variants && targetProduct.variants.length > 0) {
+              setSelectedVariant(targetProduct.variants[0]);
+            }
           }
         }
       } catch (error) {
@@ -76,6 +100,12 @@ export default function ProductPage({ params }) {
 
   const handleAddToCart = () => {
     if (product) {
+      // If product has variants, ensure one is selected
+      if (product.variants && product.variants.length > 0 && !selectedVariant) {
+        alert(`Please select a ${product.variantType}`);
+        return;
+      }
+      
       dispatch({
         type: 'ADD_ITEM',
         item: {
@@ -86,6 +116,8 @@ export default function ProductPage({ params }) {
           price: product.price,
           priceId: product.priceId,
           currency: product.currency,
+          variant: selectedVariant, // Include selected variant
+          variantType: product.variantType,
         },
       });
     }
@@ -125,7 +157,7 @@ export default function ProductPage({ params }) {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center">
+    <main className="min-h-screen flex items-center justify-center pb-32">
       <div className="mx-auto px-2 my-10 pt-18">
         <div className="w-full mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -161,12 +193,37 @@ export default function ProductPage({ params }) {
                 <p className="text-black">{product.description}</p>
               </div>
               
-              <div className="space-y-4">
+              {/* Variant Selection */}
+              {product.variants && product.variants.length > 0 && (
+                <div className="mb-6">
+                  <label className="block font-medium text-black mb-2 capitalize">
+                    {product.variantType}:
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {product.variants.map((variant) => (
+                      <button
+                        key={variant}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`
+                          px-2 py-1 border transition-colors
+                          ${selectedVariant === variant 
+                            ? 'border-black bg-black text-white' 
+                            : 'border-black bg-white text-black hover:bg-gray-100'}
+                        `}
+                      >
+                        {variant}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <div className="space-y-4 mb-8">
                 <div className="flex flex-wrap gap-2">
                   <Button
                     onClick={handleAddToCart}
-                    disabled={!product.price}
-                    className="w-fit px-2 py-1"
+                    disabled={!product.price || (product.variants && product.variants.length > 0 && !selectedVariant)}
+                    className="w-fit px-4 py-2"
                   >
                     Add to Cart
                   </Button>

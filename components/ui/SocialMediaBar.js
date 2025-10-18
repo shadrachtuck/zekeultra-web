@@ -56,10 +56,8 @@ export default function SocialMediaBar() {
       try {
         const client = createClient();
         const settings = await client.getSingle('site_settings');
-        console.log('Site settings for social bar:', settings?.data);
         setSiteSettings(settings?.data);
       } catch (error) {
-        console.error('Error fetching site settings for social bar:', error);
       } finally {
         setLoading(false);
       }
@@ -127,8 +125,6 @@ export default function SocialMediaBar() {
       alt: "Tidal"
     },
   ].filter(link => link.url); // Only show links that have URLs
-
-  console.log('Social links found:', socialLinks.length);
 
   // Show a placeholder if no links are configured
   if (socialLinks.length === 0) {

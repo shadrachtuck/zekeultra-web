@@ -30,6 +30,7 @@ const CheckmarkIcon = () => (
 export default function ProductCarousel({ products }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCheckmark, setShowCheckmark] = useState(false);
+  const [selectedVariants, setSelectedVariants] = useState({}); // Track selected variant per product
   const { dispatch } = useCart();
 
   const nextSlide = () => {
@@ -38,6 +39,13 @@ export default function ProductCarousel({ products }) {
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + products.length) % products.length);
+  };
+
+  const handleVariantSelect = (productId, variant) => {
+    setSelectedVariants(prev => ({
+      ...prev,
+      [productId]: variant
+    }));
   };
 
   const handleAddToCart = (e, product) => {
@@ -60,6 +68,8 @@ export default function ProductCarousel({ products }) {
         price: product.price,
         priceId: product.priceId,
         currency: product.currency,
+        variant: selectedVariants[product.id], // Include selected variant
+        variantType: product.variantType,
       },
     });
     
@@ -107,6 +117,38 @@ export default function ProductCarousel({ products }) {
             </div>
             <div className="p-2 text-center">
               <h3 className="text-xl font-bold text-black">{product.name}</h3>
+              
+              {/* Variant Selection */}
+              {product.variants && product.variants.length > 0 && (
+                <div className="mt-2">
+                  <div className="text-xs text-gray-600 mb-2 capitalize">
+                    Select {product.variantType}:
+                  </div>
+                  <div className="flex flex-wrap justify-center gap-1">
+                    {product.variants.map((variant) => {
+                      const isSelected = selectedVariants[product.id] === variant;
+                      return (
+                        <button
+                          key={variant}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleVariantSelect(product.id, variant);
+                          }}
+                          className={`
+                            px-2 py-1 text-xs border transition-colors rounded
+                            ${isSelected 
+                              ? 'border-black bg-black text-white' 
+                              : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-100'}
+                          `}
+                        >
+                          {variant}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </Link>
           
@@ -141,7 +183,7 @@ export default function ProductCarousel({ products }) {
                 {/* Plus Button - Always Centered */}
                 <button
                   onClick={(e) => handleAddToCart(e, product)}
-                  disabled={!product.price}
+                  disabled={!product.price || (product.variants && product.variants.length > 0 && !selectedVariants[product.id])}
                   className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Add to cart"
                 >
@@ -182,7 +224,7 @@ export default function ProductCarousel({ products }) {
             <div className="flex items-center justify-center">
               <button
                 onClick={(e) => handleAddToCart(e, product)}
-                disabled={!product.price}
+                disabled={!product.price || (product.variants && product.variants.length > 0 && !selectedVariants[product.id])}
                 className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Add to cart"
               >

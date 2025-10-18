@@ -42,6 +42,7 @@ export default function ProductCarousel({ slice }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCheckmark, setShowCheckmark] = useState(false);
+  const [selectedVariants, setSelectedVariants] = useState({}); // Track selected variant per product
   const { dispatch } = useCart();
 
   // Check if we should use Stripe products or manual products
@@ -87,6 +88,22 @@ export default function ProductCarousel({ slice }) {
               .filter(product => product.prices.length > 0)
               .map(product => {
                 const price = product.prices[0];
+                
+                // Parse variant information from metadata
+                let variants = null;
+                let variantType = 'size'; // default
+                
+                if (product.metadata) {
+                  // Check if product has variants defined in metadata
+                  // Format: { variants: "S,M,L,XL" } or { variants: "Small,Medium,Large" }
+                  if (product.metadata.variants) {
+                    variants = product.metadata.variants.split(',').map(v => v.trim());
+                  }
+                  if (product.metadata.variant_type) {
+                    variantType = product.metadata.variant_type;
+                  }
+                }
+                
                 return {
                   id: product.id,
                   name: product.name,
@@ -95,6 +112,9 @@ export default function ProductCarousel({ slice }) {
                   price: price ? price.unit_amount : null,
                   priceId: price ? price.id : null,
                   currency: price ? price.currency : 'usd',
+                  variants: variants,
+                  variantType: variantType,
+                  metadata: product.metadata,
                 };
               });
             
@@ -159,22 +179,33 @@ export default function ProductCarousel({ slice }) {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + products.length) % products.length);
   };
 
+  const handleVariantSelect = (productId, variant) => {
+    setSelectedVariants(prev => ({
+      ...prev,
+      [productId]: variant
+    }));
+  };
+
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    const productId = product.product_id || product.id;
     
     setShowCheckmark(true);
     
     dispatch({
       type: 'ADD_ITEM',
       item: {
-        id: product.product_id || product.id,
+        id: productId,
         name: product.product_name || product.name,
         description: product.product_description || product.description,
         image: product.product_image?.url || product.images?.[0],
         price: product.product_price || product.price,
         priceId: product.stripe_price_id || product.priceId,
         currency: product.currency || 'usd',
+        variant: selectedVariants[productId], // Include selected variant
+        variantType: product.variantType,
       },
     });
     
@@ -261,6 +292,39 @@ export default function ProductCarousel({ slice }) {
               </div>
               <div className="p-2 text-center">
                 <h3 className="text-xl font-bold text-black">{productName}</h3>
+                
+                {/* Variant Selection */}
+                {product.variants && product.variants.length > 0 && (
+                  <div className="mt-2">
+                    <div className="text-xs text-gray-600 mb-2 capitalize">
+                      Select {product.variantType}:
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-1">
+                      {product.variants.map((variant) => {
+                        const productId = product.product_id || product.id;
+                        const isSelected = selectedVariants[productId] === variant;
+                        return (
+                          <button
+                            key={variant}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleVariantSelect(productId, variant);
+                            }}
+                            className={`
+                              px-2 py-1 text-xs border transition-colors rounded
+                              ${isSelected 
+                                ? 'border-black bg-black text-white' 
+                                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-100'}
+                            `}
+                          >
+                            {variant}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </Link>
             
@@ -295,7 +359,7 @@ export default function ProductCarousel({ slice }) {
                   {/* Plus Button - Centered */}
                   <button
                     onClick={(e) => handleAddToCart(e, product)}
-                    disabled={!productPrice}
+                    disabled={!productPrice || (product.variants && product.variants.length > 0 && !selectedVariants[product.product_id || product.id])}
                     className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     aria-label="Add to cart"
                   >
@@ -337,7 +401,7 @@ export default function ProductCarousel({ slice }) {
               <div className="flex items-center justify-center px-2 pb-4">
                 <button
                   onClick={(e) => handleAddToCart(e, product)}
-                  disabled={!productPrice}
+                  disabled={!productPrice || (product.variants && product.variants.length > 0 && !selectedVariants[product.product_id || product.id])}
                   className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Add to cart"
                 >

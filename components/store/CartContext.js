@@ -19,17 +19,25 @@ const loadCartFromStorage = () => {
 
 const initialState = { items: [] };
 
+// Helper function to create a unique cart item key
+const getCartItemKey = (item) => {
+  return item.variant ? `${item.id}-${item.variant}` : item.id;
+};
+
 function cartReducer(state, action) {
   let newState;
   
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existing = state.items.find(item => item.id === action.item.id);
+      // Use composite key for items with variants
+      const itemKey = getCartItemKey(action.item);
+      const existing = state.items.find(item => getCartItemKey(item) === itemKey);
+      
       if (existing) {
         newState = {
           ...state,
           items: state.items.map(item =>
-            item.id === action.item.id
+            getCartItemKey(item) === itemKey
               ? { ...item, quantity: item.quantity + 1 }
               : item
           ),
@@ -43,17 +51,21 @@ function cartReducer(state, action) {
       break;
     }
     case 'REMOVE_ITEM': {
+      // Support both id and cartItemKey for removal
+      const removeKey = action.cartItemKey || action.id;
       newState = {
         ...state,
-        items: state.items.filter(item => item.id !== action.id),
+        items: state.items.filter(item => getCartItemKey(item) !== removeKey),
       };
       break;
     }
     case 'UPDATE_QUANTITY': {
+      // Support both id and cartItemKey for quantity updates
+      const updateKey = action.cartItemKey || action.id;
       newState = {
         ...state,
         items: state.items.map(item =>
-          item.id === action.id ? { ...item, quantity: action.quantity } : item
+          getCartItemKey(item) === updateKey ? { ...item, quantity: action.quantity } : item
         ),
       };
       break;
@@ -104,4 +116,7 @@ export function CartProvider({ children }) {
 
 export function useCart() {
   return useContext(CartContext);
-} 
+}
+
+// Export helper function for use in components
+export { getCartItemKey }; 

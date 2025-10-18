@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {
   Elements,
-  CardElement,
+  PaymentElement,
   AddressElement,
   useStripe,
   useElements,
@@ -50,33 +50,16 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
         throw new Error('Please complete all shipping address fields');
       }
 
-      // Create payment intent with shipping info
-      const response = await fetch('/api/create-payment-intent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          amount,
-          shipping: addressValue.value
-        }),
-      });
-
-      const { clientSecret, error: intentError } = await response.json();
-
-      if (intentError) {
-        throw new Error(intentError);
-      }
-
-      // Confirm payment with shipping info
-      const { error: paymentError } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardElement),
-          billing_details: {
+      // Confirm payment with PaymentElement (supports cards, Apple Pay, Affirm, Afterpay, Klarna)
+      const { error: paymentError } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/checkout?success=true`,
+          shipping: {
             name: addressValue.value.name,
             address: {
               line1: addressValue.value.address.line1,
-              line2: addressValue.value.address.line2,
+              line2: addressValue.value.address.line2 || '',
               city: addressValue.value.address.city,
               state: addressValue.value.address.state,
               postal_code: addressValue.value.address.postal_code,
@@ -84,6 +67,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
             },
           },
         },
+        redirect: 'if_required', // Only redirect for payment methods that require it
       });
 
       if (paymentError) {
@@ -100,7 +84,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
     }
   };
 
-  const handleCardChange = (event) => {
+  const handlePaymentChange = (event) => {
     setHasPaymentInfo(event.complete);
   };
 
@@ -109,24 +93,6 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
     if (event.complete) {
       setShippingAddress(event.value);
     }
-  };
-
-  const cardElementOptions = {
-    style: {
-      base: {
-        fontSize: '16px',
-        color: '#000000',
-        fontFamily: 'system-ui, -apple-system, sans-serif',
-        '::placeholder': {
-          color: '#9ca3af',
-        },
-        backgroundColor: 'transparent',
-      },
-      invalid: {
-        color: '#ef4444',
-        iconColor: '#ef4444',
-      },
-    },
   };
 
   const addressElementOptions = {
@@ -169,10 +135,9 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
           <label className="block font-medium text-black mb-4">
             Payment Information
           </label>
-          <div className="bg-transparent px-2 py-2 border-b border-black">
-            <CardElement 
-              options={cardElementOptions} 
-              onChange={handleCardChange}
+          <div className="bg-transparent">
+            <PaymentElement 
+              onChange={handlePaymentChange}
             />
           </div>
         </div>
@@ -204,12 +169,15 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
 
 export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
   const [stripePromise, setStripePromise] = useState(null);
+  const [clientSecret, setClientSecret] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [paymentIntentId, setPaymentIntentId] = useState(null);
 
+  // Initialize Stripe once on mount
   useEffect(() => {
     let mounted = true;
     
-    const fetchStripeKey = async () => {
+    const initializeStripe = async () => {
       try {
         const client = createClient();
         const siteSettings = await client.getSingle('site_settings');
@@ -230,7 +198,7 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
           }
         }
       } catch (error) {
-        console.error('Error fetching Stripe key:', error);
+        console.error('Error loading Stripe:', error);
         if (mounted) {
           // Fallback to environment variable
           const envKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
@@ -238,6 +206,43 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
             setStripePromise(loadStripe(envKey));
           }
         }
+      }
+    };
+
+    initializeStripe();
+    
+    return () => {
+      mounted = false;
+    };
+  }, []); // Only run once on mount
+
+  // Create/update payment intent when amount changes
+  useEffect(() => {
+    let mounted = true;
+    
+    const updatePaymentIntent = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Create or update payment intent
+        const response = await fetch('/api/create-payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            amount,
+            paymentIntentId: paymentIntentId, // Send existing ID if we have one
+          }),
+        });
+
+        const { clientSecret: secret, paymentIntentId: id } = await response.json();
+        if (mounted && secret) {
+          setClientSecret(secret);
+          setPaymentIntentId(id);
+        }
+      } catch (error) {
+        console.error('Error creating/updating payment intent:', error);
       } finally {
         if (mounted) {
           setIsLoading(false);
@@ -245,14 +250,14 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
       }
     };
 
-    fetchStripeKey();
+    updatePaymentIntent();
     
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [amount, paymentIntentId]); // Re-run when amount changes
 
-  if (isLoading) {
+  if (isLoading || !clientSecret) {
     return <div className="text-center py-8">Loading payment form...</div>;
   }
 
@@ -262,7 +267,7 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
 
   // Appearance configuration for all Elements
   const appearance = {
-    theme: 'stripe',
+    theme: 'flat',
     variables: {
       colorPrimary: '#000000',
       colorBackground: 'transparent',
@@ -274,6 +279,21 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
       focusBoxShadow: 'none',
     },
     rules: {
+      '.AccordionItem': {
+        backgroundColor: 'transparent',
+        border: '1px solid #000000',
+        borderRadius: '0px',
+        boxShadow: 'none',
+        marginBottom: '8px',
+      },
+      '.AccordionItem:hover': {
+        backgroundColor: 'transparent',
+        border: '1px solid #000000',
+      },
+      '.AccordionItem--expanded': {
+        backgroundColor: 'transparent',
+        border: '1px solid #000000',
+      },
       '.Input': {
         border: 'none',
         borderBottom: '1px solid #000000',
@@ -285,7 +305,6 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
       '.Input:focus': {
         borderBottom: '1px solid #000000',
         boxShadow: 'none',
-        outline: 'none',
       },
       '.Input:hover': {
         borderBottom: '1px solid #000000',
@@ -301,24 +320,19 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
       },
       '.Block': {
         backgroundColor: 'transparent',
-      },
-      '.Tab': {
         border: 'none',
-        borderBottom: '2px solid transparent',
-        boxShadow: 'none',
-      },
-      '.Tab:hover': {
-        borderBottom: '2px solid #000000',
-      },
-      '.Tab--selected': {
-        borderBottom: '2px solid #000000',
         boxShadow: 'none',
       },
     },
   };
 
+  const options = {
+    clientSecret,
+    appearance,
+  };
+
   return (
-    <Elements stripe={stripePromise} options={{ appearance }}>
+    <Elements stripe={stripePromise} options={options}>
       <CheckoutForm amount={amount} onSuccess={onSuccess} onError={onError} />
     </Elements>
   );

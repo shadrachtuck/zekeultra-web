@@ -4,7 +4,7 @@ import { createPaymentIntent } from '../../../lib/stripe';
 
 export async function POST(request) {
   try {
-    const { amount, currency = 'usd', shipping } = await request.json();
+    const { amount, currency = 'usd', shipping, paymentIntentId } = await request.json();
 
     if (!amount) {
       return NextResponse.json(
@@ -27,36 +27,30 @@ export async function POST(request) {
       );
     }
 
-    // Create a PaymentIntent with the order amount, currency, and shipping info
-    const paymentIntentOptions = {
-      amount,
-      currency,
-    };
+    // Import stripe with the API key
+    const stripe = require('stripe')(stripeApiKey);
 
-    // Add shipping information if provided
-    if (shipping) {
-      paymentIntentOptions.shipping = {
-        name: shipping.name,
-        address: {
-          line1: shipping.address.line1,
-          line2: shipping.address.line2,
-          city: shipping.address.city,
-          state: shipping.address.state,
-          postal_code: shipping.address.postal_code,
-          country: shipping.address.country,
-        },
-      };
+    let paymentIntent;
+
+    // If we have an existing payment intent ID, update it
+    if (paymentIntentId) {
+      try {
+        paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
+          amount,
+        });
+      } catch (updateError) {
+        console.error('Error updating payment intent, creating new one:', updateError);
+        // If update fails, create a new one
+        paymentIntent = await createNewPaymentIntent(stripe, amount, currency, shipping);
+      }
+    } else {
+      // Create a new payment intent
+      paymentIntent = await createNewPaymentIntent(stripe, amount, currency, shipping);
     }
-
-    const paymentIntent = await createPaymentIntent(
-      paymentIntentOptions.amount, 
-      paymentIntentOptions.currency, 
-      stripeApiKey,
-      paymentIntentOptions.shipping
-    );
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
     });
   } catch (error) {
     console.error('Error creating payment intent:', error);
@@ -65,4 +59,31 @@ export async function POST(request) {
       { status: 500 }
     );
   }
+}
+
+async function createNewPaymentIntent(stripe, amount, currency, shipping) {
+  const paymentIntentOptions = {
+    amount,
+    currency,
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  };
+
+  // Add shipping information if provided
+  if (shipping) {
+    paymentIntentOptions.shipping = {
+      name: shipping.name,
+      address: {
+        line1: shipping.address.line1,
+        line2: shipping.address.line2,
+        city: shipping.address.city,
+        state: shipping.address.state,
+        postal_code: shipping.address.postal_code,
+        country: shipping.address.country,
+      },
+    };
+  }
+
+  return await stripe.paymentIntents.create(paymentIntentOptions);
 } 

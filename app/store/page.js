@@ -43,6 +43,22 @@ export default async function StorePage() {
       .map(product => {
         // Use the first price for display
         const price = product.prices[0];
+        
+        // Parse variant information from metadata
+        let variants = null;
+        let variantType = 'size'; // default
+        
+        if (product.metadata) {
+          // Check if product has variants defined in metadata
+          // Format: { variants: "S,M,L,XL" } or { variants: "Small,Medium,Large" }
+          if (product.metadata.variants) {
+            variants = product.metadata.variants.split(',').map(v => v.trim());
+          }
+          if (product.metadata.variant_type) {
+            variantType = product.metadata.variant_type;
+          }
+        }
+        
         return {
           id: product.id,
           name: product.name,
@@ -51,6 +67,9 @@ export default async function StorePage() {
           price: price ? price.unit_amount : null,
           priceId: price ? price.id : null,
           currency: price ? price.currency : 'usd',
+          variants: variants,
+          variantType: variantType,
+          metadata: product.metadata,
         };
       });
 
