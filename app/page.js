@@ -65,7 +65,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="py-16 md:py-24">
+    <div className="py-6 md:py-12">
       {/* SLICE ZONE */}
       <SliceZone 
         slices={homepage?.data?.slices || []} 

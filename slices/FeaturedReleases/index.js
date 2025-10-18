@@ -14,7 +14,7 @@ const generateSlug = (title) => {
 
 export default function FeaturedReleases({ slice }) {
   return (
-    <section className="py-16 px-2">
+    <section className="py-8 px-2">
       <div className="max-w-6xl mx-auto">
         {slice.primary.section_title && (
           <h2 className="text-2xl md:text-4xl font-bold text-center mb-12 pb-2">
