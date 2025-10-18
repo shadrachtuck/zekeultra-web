@@ -2,7 +2,7 @@ import { PrismicRichText } from '@prismicio/react';
 
 export default function UpcomingEvents({ slice }) {
   return (
-    <section className="py-8 px-2 bg-gray-50">
+    <section className="py-8 md:py-16 px-2 bg-gray-50">
       <div className="max-w-6xl mx-auto">
         {slice.primary.section_title && (
           <h2 className="text-2xl md:text-4xl font-bold text-center mb-12 pb-2">
