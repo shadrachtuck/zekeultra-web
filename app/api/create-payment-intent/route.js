@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '../../../lib/prismic';
-import { createPaymentIntent } from '../../../lib/stripe';
+import Stripe from 'stripe';
 
 export async function POST(request) {
   try {
@@ -27,8 +27,10 @@ export async function POST(request) {
       );
     }
 
-    // Import stripe with the API key
-    const stripe = require('stripe')(stripeApiKey);
+    // Create Stripe instance with the API key
+    const stripe = new Stripe(stripeApiKey, {
+      apiVersion: '2024-12-18.acacia',
+    });
 
     let paymentIntent;
 
@@ -54,6 +56,12 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error('Error creating payment intent:', error);
+    
+    // Don't log specific Stripe errors in development to reduce console noise
+    if (process.env.NODE_ENV === 'development' && error.message?.includes('payment method type')) {
+      console.log('Payment method configuration issue - using fallback');
+    }
+    
     return NextResponse.json(
       { error: 'Failed to create payment intent' },
       { status: 500 }

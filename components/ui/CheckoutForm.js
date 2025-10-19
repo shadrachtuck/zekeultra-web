@@ -50,7 +50,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
         throw new Error('Please complete all shipping address fields');
       }
 
-      // Confirm payment with PaymentElement (supports cards, Apple Pay, Affirm, Afterpay, Klarna)
+      // Confirm payment with PaymentElement (supports all enabled payment methods from Stripe dashboard)
       const { error: paymentError } = await stripe.confirmPayment({
         elements,
         confirmParams: {
@@ -124,7 +124,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
           </label>
           <div className="bg-transparent address-element-wrapper">
             <AddressElement 
-              options={addressElementOptions}
+              options={addressElementOptions} 
               onChange={handleAddressChange}
             />
           </div>
@@ -138,6 +138,12 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
           <div className="bg-transparent">
             <PaymentElement 
               onChange={handlePaymentChange}
+              options={{
+                wallets: {
+                  applePay: 'auto',
+                  googlePay: 'auto',
+                },
+              }}
             />
           </div>
         </div>
@@ -186,7 +192,21 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
         
         if (mounted) {
           if (publishableKey) {
+            // Suppress HTTPS warning in development
+            const originalConsoleWarn = console.warn;
+            console.warn = (...args) => {
+              if (args[0]?.includes?.('You may test your Stripe.js integration over HTTP')) {
+                return; // Suppress this specific warning
+              }
+              originalConsoleWarn.apply(console, args);
+            };
+            
             setStripePromise(loadStripe(publishableKey));
+            
+            // Restore console.warn after a short delay
+            setTimeout(() => {
+              console.warn = originalConsoleWarn;
+            }, 1000);
           } else {
             // Fallback to environment variable
             const envKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
