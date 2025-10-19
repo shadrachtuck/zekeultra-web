@@ -1,11 +1,12 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart, getCartItemKey } from '../../components/store/CartContext';
 import { formatPrice } from '../../lib/stripe';
 import CheckoutForm from '../../components/ui/CheckoutForm';
 import Button from '../../components/ui/Button';
 import Link from 'next/link';
 import CloseIcon from '../../components/ui/CloseIcon';
+import { useSearchParams } from 'next/navigation';
 
 const SHIPPING_OPTIONS = [
   // { id: 'free', name: 'Free Shipping', price: 0, days: '5-7 business days' },
@@ -17,10 +18,21 @@ export default function CheckoutPage() {
   const [orderComplete, setOrderComplete] = useState(false);
   const [selectedShipping, setSelectedShipping] = useState(SHIPPING_OPTIONS[0]);
   const { cart, dispatch } = useCart();
+  const searchParams = useSearchParams();
   
   const subtotal = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shippingCost = selectedShipping.price;
   const total = subtotal + shippingCost;
+
+  // Handle success parameter from Stripe redirect
+  useEffect(() => {
+    const success = searchParams.get('success');
+    if (success === 'true') {
+      setOrderComplete(true);
+      // Clear the cart after successful payment
+      dispatch({ type: 'CLEAR_CART' });
+    }
+  }, [searchParams, dispatch]);
 
   const handlePaymentSuccess = () => {
     setOrderComplete(true);
