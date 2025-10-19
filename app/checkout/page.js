@@ -26,15 +26,17 @@ function CheckoutPageContent() {
   const shippingCost = selectedShipping.price;
   const total = subtotal + shippingCost;
 
-  // Detect iOS mobile
+  // Detect iOS mobile - run immediately on client side
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       const isMobile = /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
-      setIsIOSMobile(isIOS && isMobile);
-      console.log('iOS Debug - Device detection:', { isIOS, isMobile, isIOSMobile: isIOS && isMobile });
+      const detectedIOSMobile = isIOS && isMobile;
+      setIsIOSMobile(detectedIOSMobile);
+      console.log('iOS Debug - Device detection:', { isIOS, isMobile, isIOSMobile: detectedIOSMobile });
     }
   }, []);
+
 
   // Handle success parameter from Stripe redirect - iOS MOBILE SPECIFIC
   useEffect(() => {
@@ -57,11 +59,22 @@ function CheckoutPageContent() {
   }, [searchParams, dispatch, isIOSMobile]);
 
   const handlePaymentSuccess = () => {
-    console.log('iOS Debug - handlePaymentSuccess called', { isIOSMobile });
+    // Detect iOS mobile directly instead of relying on state
+    const isIOS = typeof window !== 'undefined' ? /iPad|iPhone|iPod/.test(navigator.userAgent) : false;
+    const isMobile = typeof window !== 'undefined' ? (/Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 768) : false;
+    const detectedIOSMobile = isIOS && isMobile;
+    
+    console.log('iOS Debug - handlePaymentSuccess called', { 
+      isIOSMobile, 
+      detectedIOSMobile, 
+      isIOS, 
+      isMobile,
+      userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'SSR'
+    });
     
     // For iOS mobile, add a small delay to ensure payment is fully processed
-    if (isIOSMobile) {
-      console.log('iOS Debug - iOS mobile detected, adding delay before clearing cart');
+    if (detectedIOSMobile) {
+      console.log('iOS Debug - iOS mobile detected directly, adding delay before clearing cart');
       setTimeout(() => {
         console.log('iOS Debug - Delayed cart clearing for iOS mobile');
         setOrderComplete(true);

@@ -85,10 +85,20 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
         setError(paymentError.message);
         onError?.(paymentError);
       } else {
-        console.log('iOS Debug - Payment successful, calling onSuccess', { isIOSMobile });
+        // Detect iOS mobile directly instead of relying on state
+        const isIOS = typeof window !== 'undefined' ? /iPad|iPhone|iPod/.test(navigator.userAgent) : false;
+        const isMobile = typeof window !== 'undefined' ? (/Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 768) : false;
+        const detectedIOSMobile = isIOS && isMobile;
+        
+        console.log('iOS Debug - Payment successful, calling onSuccess', { 
+          isIOSMobile, 
+          detectedIOSMobile, 
+          isIOS, 
+          isMobile 
+        });
         
         // For iOS mobile, add extra validation before calling success
-        if (isIOSMobile) {
+        if (detectedIOSMobile) {
           console.log('iOS Debug - iOS mobile payment success, validating before callback');
           // Double-check that we actually have a successful payment
           setTimeout(() => {
