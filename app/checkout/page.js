@@ -42,10 +42,12 @@ function CheckoutPageContent() {
   useEffect(() => {
     console.log('iOS Debug - useEffect running, checking for success params', { isIOSMobile });
     
-    // For iOS mobile, be extra careful about when we clear the cart
-    const success = searchParams.get('success');
-    if (success === 'true') {
-      console.log('iOS Debug - Explicit URL success detected, completing order');
+    // Check for payment completion parameter (avoiding page reload that clears in-memory cart)
+    const paymentComplete = searchParams.get('payment_complete');
+    const success = searchParams.get('success'); // Keep for backward compatibility
+    
+    if (paymentComplete === 'true' || success === 'true') {
+      console.log('iOS Debug - Payment completion detected via URL params:', { paymentComplete, success });
       setOrderComplete(true);
       dispatch({ type: 'CLEAR_CART' });
       
@@ -54,7 +56,7 @@ function CheckoutPageContent() {
         window.history.replaceState({}, '', '/checkout');
       }
     } else {
-      console.log('iOS Debug - No URL success parameter, cart should remain intact');
+      console.log('iOS Debug - No payment completion parameters, cart should remain intact');
     }
   }, [searchParams, dispatch, isIOSMobile]);
 

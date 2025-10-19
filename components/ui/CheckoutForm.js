@@ -65,7 +65,8 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
       const { error: paymentError } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/checkout?success=true`,
+          // Use a different return URL to avoid page reload that clears in-memory cart
+          return_url: `${window.location.origin}/checkout?payment_complete=true`,
           shipping: {
             name: addressValue.value.name,
             address: {
@@ -78,7 +79,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
             },
           },
         },
-        redirect: 'if_required', // Only redirect for payment methods that require it
+        redirect: 'never', // Prevent any redirects that would cause page reload and cart loss
       });
 
       if (paymentError) {
