@@ -120,6 +120,13 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
   };
 
   const handlePaymentChange = (event) => {
+    console.log('iOS Debug - PaymentElement change event:', {
+      complete: event.complete,
+      empty: event.empty,
+      value: event.value,
+      elementType: event.elementType,
+      error: event.error
+    });
     setHasPaymentInfo(event.complete);
   };
 
@@ -173,11 +180,19 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
           <div className="bg-transparent">
             <PaymentElement 
               onChange={handlePaymentChange}
+              onReady={(event) => {
+                console.log('iOS Debug - PaymentElement ready:', {
+                  elementType: event.elementType,
+                  availablePaymentMethods: event.availablePaymentMethods || 'not provided'
+                });
+              }}
               options={{
                 wallets: {
                   applePay: 'auto',
                   googlePay: 'auto',
                 },
+                layout: 'tabs',
+                paymentMethodOrder: ['apple_pay', 'google_pay', 'card'],
               }}
             />
           </div>

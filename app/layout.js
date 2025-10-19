@@ -22,6 +22,13 @@ const brigendsExpanded = localFont({
 export const metadata = {
   title: 'ZekeUltra',
   description: 'Official website of ZekeUltra',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+  },
+  other: {
+    'apple-pay-capable': 'true',
+  },
 };
 
 export default function RootLayout({ children }) {
