@@ -19,8 +19,15 @@ export async function POST(request) {
     
     const stripeApiKey = siteSettings?.data?.stripe_private_api_key;
     
+    console.log('iOS Debug - Server payment intent creation:', {
+      hasSiteSettings: !!siteSettings,
+      hasStripeApiKey: !!stripeApiKey,
+      keyLength: stripeApiKey ? stripeApiKey.length : 0,
+      keyPrefix: stripeApiKey ? stripeApiKey.substring(0, 10) + '...' : 'none'
+    });
+    
     if (!stripeApiKey) {
-      console.error('Stripe private API key not found in site settings');
+      console.error('iOS Debug - Stripe private API key not found in site settings');
       return NextResponse.json(
         { error: 'Payment processing not configured' },
         { status: 500 }
@@ -93,5 +100,20 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping) {
     };
   }
 
-  return await stripe.paymentIntents.create(paymentIntentOptions);
+  console.log('iOS Debug - Creating payment intent with options:', {
+    amount: paymentIntentOptions.amount,
+    currency: paymentIntentOptions.currency,
+    hasAutomaticPaymentMethods: !!paymentIntentOptions.automatic_payment_methods,
+    hasShipping: !!paymentIntentOptions.shipping
+  });
+  
+  const paymentIntent = await stripe.paymentIntents.create(paymentIntentOptions);
+  
+  console.log('iOS Debug - Payment intent created:', {
+    id: paymentIntent.id,
+    status: paymentIntent.status,
+    clientSecret: paymentIntent.client_secret ? 'present' : 'missing'
+  });
+  
+  return paymentIntent;
 } 

@@ -240,6 +240,12 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
         
         const publishableKey = siteSettings?.data?.stripe_public_api_key;
         
+        console.log('iOS Debug - Stripe initialization:', {
+          hasPublishableKey: !!publishableKey,
+          keyLength: publishableKey ? publishableKey.length : 0,
+          keyPrefix: publishableKey ? publishableKey.substring(0, 10) + '...' : 'none'
+        });
+        
         if (mounted) {
           if (publishableKey) {
             // Suppress HTTPS warning in development
@@ -251,7 +257,9 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
               originalConsoleWarn.apply(console, args);
             };
             
-            setStripePromise(loadStripe(publishableKey));
+            const stripe = await loadStripe(publishableKey);
+            console.log('iOS Debug - Stripe loaded successfully:', !!stripe);
+            setStripePromise(stripe);
             
             // Restore console.warn after a short delay
             setTimeout(() => {
@@ -260,15 +268,21 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
           } else {
             // Fallback to environment variable
             const envKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+            console.log('iOS Debug - Using fallback Stripe key:', {
+              hasEnvKey: !!envKey,
+              keyLength: envKey ? envKey.length : 0
+            });
             if (envKey) {
-              setStripePromise(loadStripe(envKey));
+              const stripe = await loadStripe(envKey);
+              console.log('iOS Debug - Fallback Stripe loaded successfully:', !!stripe);
+              setStripePromise(stripe);
             } else {
-              console.error('No Stripe publishable key found');
+              console.error('iOS Debug - No Stripe publishable key found in site settings or environment');
             }
           }
         }
       } catch (error) {
-        console.error('Error loading Stripe:', error);
+        console.error('iOS Debug - Error loading Stripe:', error);
         if (mounted) {
           // Fallback to environment variable
           const envKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
@@ -295,6 +309,7 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
         setIsLoading(true);
         
         // Create or update payment intent
+        console.log('iOS Debug - Creating payment intent with amount:', amount);
         const response = await fetch('/api/create-payment-intent', {
           method: 'POST',
           headers: {
@@ -306,7 +321,23 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
           }),
         });
 
+        console.log('iOS Debug - Payment intent response:', {
+          ok: response.ok,
+          status: response.status,
+          statusText: response.statusText
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('iOS Debug - Payment intent creation failed:', errorText);
+          throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+        }
+
         const { clientSecret: secret, paymentIntentId: id } = await response.json();
+        console.log('iOS Debug - Payment intent created successfully:', {
+          hasClientSecret: !!secret,
+          hasPaymentIntentId: !!id
+        });
         if (mounted && secret) {
           setClientSecret(secret);
           setPaymentIntentId(id);
