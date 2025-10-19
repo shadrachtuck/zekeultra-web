@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useCart, getCartItemKey } from '../../components/store/CartContext';
 import { formatPrice } from '../../lib/stripe';
 import CheckoutForm from '../../components/ui/CheckoutForm';
@@ -14,7 +14,7 @@ const SHIPPING_OPTIONS = [
   { id: 'express', name: 'Express Shipping', price: 1500, days: '1-2 business days' },
 ];
 
-export default function CheckoutPage() {
+function CheckoutPageContent() {
   const [orderComplete, setOrderComplete] = useState(false);
   const [selectedShipping, setSelectedShipping] = useState(SHIPPING_OPTIONS[0]);
   const { cart, dispatch } = useCart();
@@ -228,5 +228,13 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <CheckoutPageContent />
+    </Suspense>
   );
 } 
