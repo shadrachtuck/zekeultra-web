@@ -3,17 +3,33 @@ import React, { createContext, useContext, useReducer, useEffect, useState } fro
 
 const CartContext = createContext();
 
+// Safe localStorage check for iOS Safari
+const isLocalStorageAvailable = () => {
+  if (typeof window === 'undefined') return false;
+  try {
+    const test = '__localStorage_test__';
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch (e) {
+    console.log('iOS Debug - localStorage not available (Private Browsing or Cross-Site Tracking Prevention)');
+    return false;
+  }
+};
+
 // Load cart from localStorage on initial render
 const loadCartFromStorage = () => {
-  if (typeof window !== 'undefined') {
+  if (isLocalStorageAvailable()) {
     try {
       const savedCart = localStorage.getItem('zekeultra-cart');
+      console.log('iOS Debug - Cart loaded from localStorage:', savedCart ? 'found' : 'empty');
       return savedCart ? JSON.parse(savedCart) : { items: [] };
     } catch (error) {
-      console.error('Error loading cart from localStorage:', error);
+      console.log('iOS Debug - Error parsing cart from localStorage:', error);
       return { items: [] };
     }
   }
+  console.log('iOS Debug - localStorage not available, using in-memory cart');
   return { items: [] };
 };
 
@@ -83,13 +99,17 @@ function cartReducer(state, action) {
       return state;
   }
   
-  // Save to localStorage whenever cart changes
-  if (typeof window !== 'undefined') {
+  // Save to localStorage whenever cart changes (if available)
+  if (isLocalStorageAvailable()) {
     try {
       localStorage.setItem('zekeultra-cart', JSON.stringify(newState));
+      console.log('iOS Debug - Cart saved to localStorage, items:', newState.items.length);
     } catch (error) {
-      console.error('Error saving cart to localStorage:', error);
+      console.log('iOS Debug - Error saving cart to localStorage:', error);
+      // Cart will work in-memory even if localStorage fails
     }
+  } else {
+    console.log('iOS Debug - localStorage not available, cart will be in-memory only (items:', newState.items.length, ')');
   }
   
   return newState;
