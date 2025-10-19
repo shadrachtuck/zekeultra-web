@@ -36,33 +36,50 @@ function CheckoutPageContent() {
       
       console.log('iOS Debug - URL params:', { success, paymentIntentId, url: typeof window !== 'undefined' ? window.location.href : 'SSR', hasProcessedSuccess });
       
+      // Only process if we have explicit success indicators
+      let shouldProcessSuccess = false;
+      
       // Check URL parameters first
       if (success === 'true') {
-        console.log('iOS Debug - Success detected via URL params, completing order');
-        setHasProcessedSuccess(true);
-        setOrderComplete(true);
-        dispatch({ type: 'CLEAR_CART' });
-        // Clean up URL to prevent re-triggering (with iOS safety check)
-        if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
-          window.history.replaceState({}, '', '/checkout');
-        }
-        return;
+        console.log('iOS Debug - Success detected via URL params');
+        shouldProcessSuccess = true;
       }
       
       // iOS fallback: Check localStorage for payment success (with safety checks)
-      if (typeof window !== 'undefined' && window.localStorage) {
+      if (!shouldProcessSuccess && typeof window !== 'undefined' && window.localStorage) {
         try {
           const paymentSuccess = localStorage.getItem('payment_success');
           if (paymentSuccess === 'true') {
-            console.log('iOS Debug - Success detected via localStorage, completing order');
-            setHasProcessedSuccess(true);
-            setOrderComplete(true);
-            dispatch({ type: 'CLEAR_CART' });
-            localStorage.removeItem('payment_success');
+            console.log('iOS Debug - Success detected via localStorage');
+            shouldProcessSuccess = true;
           }
         } catch (localStorageError) {
           console.log('iOS Debug - localStorage access failed:', localStorageError);
         }
+      }
+      
+      // Only clear cart if we have explicit success
+      if (shouldProcessSuccess) {
+        console.log('iOS Debug - Processing success, completing order');
+        setHasProcessedSuccess(true);
+        setOrderComplete(true);
+        dispatch({ type: 'CLEAR_CART' });
+        
+        // Clean up URL to prevent re-triggering (with iOS safety check)
+        if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+          window.history.replaceState({}, '', '/checkout');
+        }
+        
+        // Clean up localStorage
+        if (typeof window !== 'undefined' && window.localStorage) {
+          try {
+            localStorage.removeItem('payment_success');
+          } catch (localStorageError) {
+            console.log('iOS Debug - localStorage cleanup failed:', localStorageError);
+          }
+        }
+      } else {
+        console.log('iOS Debug - No success indicators found, not clearing cart');
       }
     } catch (error) {
       console.error('iOS Debug - Error in success handling:', error);
@@ -70,6 +87,7 @@ function CheckoutPageContent() {
   }, [searchParams, dispatch, hasProcessedSuccess]);
 
   const handlePaymentSuccess = () => {
+    console.log('iOS Debug - handlePaymentSuccess called');
     setOrderComplete(true);
     // Clear the cart after successful payment
     dispatch({ type: 'CLEAR_CART' });

@@ -74,6 +74,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
         setError(paymentError.message);
         onError?.(paymentError);
       } else {
+        console.log('iOS Debug - Payment successful, calling onSuccess');
         // Set localStorage backup for Safari/iOS compatibility (with safety checks)
         try {
           if (typeof window !== 'undefined' && window.localStorage) {
