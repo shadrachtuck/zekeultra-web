@@ -64,6 +64,13 @@ function cartReducer(state, action) {
           items: [...state.items, { ...action.item, quantity: 1 }],
         };
       }
+      console.log('iOS Debug - ADD_ITEM:', { 
+        itemKey, 
+        existing: !!existing, 
+        beforeCount: state.items.length, 
+        afterCount: newState.items.length,
+        itemName: action.item.name 
+      });
       break;
     }
     case 'REMOVE_ITEM': {
@@ -93,6 +100,11 @@ function cartReducer(state, action) {
     }
     case 'RESTORE_CART': {
       newState = { items: action.items };
+      console.log('iOS Debug - RESTORE_CART:', { 
+        beforeCount: state.items.length, 
+        afterCount: newState.items.length,
+        restoredItems: action.items.length 
+      });
       break;
     }
     default:
@@ -121,8 +133,13 @@ export function CartProvider({ children }) {
   
   // Only load from localStorage after client-side hydration
   useEffect(() => {
+    console.log('iOS Debug - CartProvider useEffect running');
     setIsClient(true);
     const savedCart = loadCartFromStorage();
+    console.log('iOS Debug - CartProvider initialization:', { 
+      savedCartItems: savedCart.items.length,
+      willRestore: savedCart.items.length > 0 
+    });
     if (savedCart.items.length > 0) {
       dispatch({ type: 'RESTORE_CART', items: savedCart.items });
     }
