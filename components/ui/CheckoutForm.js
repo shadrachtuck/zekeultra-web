@@ -259,6 +259,21 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
             
             const stripe = await loadStripe(publishableKey);
             console.log('iOS Debug - Stripe loaded successfully:', !!stripe);
+            
+            // Test if the publishable key is valid by making a test call
+            if (stripe) {
+              try {
+                // This will help us verify if the key is working
+                console.log('iOS Debug - Testing Stripe key validity...');
+                // We can't test the key directly, but we can check if it's properly formatted
+                const isTestKey = publishableKey.startsWith('pk_test_');
+                const isLiveKey = publishableKey.startsWith('pk_live_');
+                console.log('iOS Debug - Stripe key type:', { isTestKey, isLiveKey, keyLength: publishableKey.length });
+              } catch (keyError) {
+                console.error('iOS Debug - Stripe key validation error:', keyError);
+              }
+            }
+            
             setStripePromise(stripe);
             
             // Restore console.warn after a short delay
@@ -278,6 +293,16 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
               setStripePromise(stripe);
             } else {
               console.error('iOS Debug - No Stripe publishable key found in site settings or environment');
+              // Try test key as last resort for debugging
+              const testKey = 'pk_test_51234567890abcdef'; // This is a dummy test key
+              console.log('iOS Debug - Attempting to use test key for debugging...');
+              try {
+                const testStripe = await loadStripe(testKey);
+                console.log('iOS Debug - Test Stripe loaded:', !!testStripe);
+                // Don't actually use it, just test loading
+              } catch (testError) {
+                console.log('iOS Debug - Test key failed as expected:', testError.message);
+              }
             }
           }
         }
