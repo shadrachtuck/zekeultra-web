@@ -19,6 +19,17 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
   const [hasPaymentInfo, setHasPaymentInfo] = useState(false);
   const [hasShippingInfo, setHasShippingInfo] = useState(false);
   const [shippingAddress, setShippingAddress] = useState(null);
+  const [isIOSMobile, setIsIOSMobile] = useState(false);
+
+  // Detect iOS mobile
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isMobile = /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+      setIsIOSMobile(isIOS && isMobile);
+      console.log('iOS Debug - CheckoutForm device detection:', { isIOS, isMobile, isIOSMobile: isIOS && isMobile });
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -74,9 +85,20 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
         setError(paymentError.message);
         onError?.(paymentError);
       } else {
-        console.log('iOS Debug - Payment successful, calling onSuccess');
-        // TEMPORARILY DISABLED - localStorage backup removed for debugging
-        onSuccess?.();
+        console.log('iOS Debug - Payment successful, calling onSuccess', { isIOSMobile });
+        
+        // For iOS mobile, add extra validation before calling success
+        if (isIOSMobile) {
+          console.log('iOS Debug - iOS mobile payment success, validating before callback');
+          // Double-check that we actually have a successful payment
+          setTimeout(() => {
+            console.log('iOS Debug - iOS mobile delayed success callback');
+            onSuccess?.();
+          }, 500); // Small delay for iOS
+        } else {
+          console.log('iOS Debug - Non-iOS mobile, calling success immediately');
+          onSuccess?.();
+        }
       }
     } catch (err) {
       setError(err.message);

@@ -18,6 +18,7 @@ function CheckoutPageContent() {
   const [orderComplete, setOrderComplete] = useState(false);
   const [selectedShipping, setSelectedShipping] = useState(SHIPPING_OPTIONS[0]);
   const [hasProcessedSuccess, setHasProcessedSuccess] = useState(false);
+  const [isIOSMobile, setIsIOSMobile] = useState(false);
   const { cart, dispatch } = useCart();
   const searchParams = useSearchParams();
   
@@ -25,11 +26,21 @@ function CheckoutPageContent() {
   const shippingCost = selectedShipping.price;
   const total = subtotal + shippingCost;
 
-  // Handle success parameter from Stripe redirect - DISABLED FOR DEBUGGING
+  // Detect iOS mobile
   useEffect(() => {
-    console.log('iOS Debug - useEffect running, checking for success params');
+    if (typeof window !== 'undefined') {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isMobile = /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+      setIsIOSMobile(isIOS && isMobile);
+      console.log('iOS Debug - Device detection:', { isIOS, isMobile, isIOSMobile: isIOS && isMobile });
+    }
+  }, []);
+
+  // Handle success parameter from Stripe redirect - iOS MOBILE SPECIFIC
+  useEffect(() => {
+    console.log('iOS Debug - useEffect running, checking for success params', { isIOSMobile });
     
-    // TEMPORARILY DISABLED - Only process explicit URL success parameter
+    // For iOS mobile, be extra careful about when we clear the cart
     const success = searchParams.get('success');
     if (success === 'true') {
       console.log('iOS Debug - Explicit URL success detected, completing order');
@@ -43,13 +54,24 @@ function CheckoutPageContent() {
     } else {
       console.log('iOS Debug - No URL success parameter, cart should remain intact');
     }
-  }, [searchParams, dispatch]);
+  }, [searchParams, dispatch, isIOSMobile]);
 
   const handlePaymentSuccess = () => {
-    console.log('iOS Debug - handlePaymentSuccess called');
-    setOrderComplete(true);
-    // Clear the cart after successful payment
-    dispatch({ type: 'CLEAR_CART' });
+    console.log('iOS Debug - handlePaymentSuccess called', { isIOSMobile });
+    
+    // For iOS mobile, add a small delay to ensure payment is fully processed
+    if (isIOSMobile) {
+      console.log('iOS Debug - iOS mobile detected, adding delay before clearing cart');
+      setTimeout(() => {
+        console.log('iOS Debug - Delayed cart clearing for iOS mobile');
+        setOrderComplete(true);
+        dispatch({ type: 'CLEAR_CART' });
+      }, 1000); // 1 second delay
+    } else {
+      console.log('iOS Debug - Non-iOS mobile, clearing cart immediately');
+      setOrderComplete(true);
+      dispatch({ type: 'CLEAR_CART' });
+    }
   };
 
   const handlePaymentError = (error) => {
