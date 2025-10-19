@@ -25,66 +25,25 @@ function CheckoutPageContent() {
   const shippingCost = selectedShipping.price;
   const total = subtotal + shippingCost;
 
-  // Handle success parameter from Stripe redirect
+  // Handle success parameter from Stripe redirect - DISABLED FOR DEBUGGING
   useEffect(() => {
-    try {
-      // Prevent multiple processing
-      if (hasProcessedSuccess) return;
+    console.log('iOS Debug - useEffect running, checking for success params');
+    
+    // TEMPORARILY DISABLED - Only process explicit URL success parameter
+    const success = searchParams.get('success');
+    if (success === 'true') {
+      console.log('iOS Debug - Explicit URL success detected, completing order');
+      setOrderComplete(true);
+      dispatch({ type: 'CLEAR_CART' });
       
-      const success = searchParams.get('success');
-      const paymentIntentId = searchParams.get('payment_intent');
-      
-      console.log('iOS Debug - URL params:', { success, paymentIntentId, url: typeof window !== 'undefined' ? window.location.href : 'SSR', hasProcessedSuccess });
-      
-      // Only process if we have explicit success indicators
-      let shouldProcessSuccess = false;
-      
-      // Check URL parameters first
-      if (success === 'true') {
-        console.log('iOS Debug - Success detected via URL params');
-        shouldProcessSuccess = true;
+      // Clean up URL
+      if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+        window.history.replaceState({}, '', '/checkout');
       }
-      
-      // iOS fallback: Check localStorage for payment success (with safety checks)
-      if (!shouldProcessSuccess && typeof window !== 'undefined' && window.localStorage) {
-        try {
-          const paymentSuccess = localStorage.getItem('payment_success');
-          if (paymentSuccess === 'true') {
-            console.log('iOS Debug - Success detected via localStorage');
-            shouldProcessSuccess = true;
-          }
-        } catch (localStorageError) {
-          console.log('iOS Debug - localStorage access failed:', localStorageError);
-        }
-      }
-      
-      // Only clear cart if we have explicit success
-      if (shouldProcessSuccess) {
-        console.log('iOS Debug - Processing success, completing order');
-        setHasProcessedSuccess(true);
-        setOrderComplete(true);
-        dispatch({ type: 'CLEAR_CART' });
-        
-        // Clean up URL to prevent re-triggering (with iOS safety check)
-        if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
-          window.history.replaceState({}, '', '/checkout');
-        }
-        
-        // Clean up localStorage
-        if (typeof window !== 'undefined' && window.localStorage) {
-          try {
-            localStorage.removeItem('payment_success');
-          } catch (localStorageError) {
-            console.log('iOS Debug - localStorage cleanup failed:', localStorageError);
-          }
-        }
-      } else {
-        console.log('iOS Debug - No success indicators found, not clearing cart');
-      }
-    } catch (error) {
-      console.error('iOS Debug - Error in success handling:', error);
+    } else {
+      console.log('iOS Debug - No URL success parameter, cart should remain intact');
     }
-  }, [searchParams, dispatch, hasProcessedSuccess]);
+  }, [searchParams, dispatch]);
 
   const handlePaymentSuccess = () => {
     console.log('iOS Debug - handlePaymentSuccess called');

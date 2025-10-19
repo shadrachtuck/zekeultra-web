@@ -71,6 +71,7 @@ function cartReducer(state, action) {
       break;
     }
     case 'CLEAR_CART': {
+      console.log('iOS Debug - CLEAR_CART action dispatched, clearing cart');
       newState = { items: [] };
       break;
     }
