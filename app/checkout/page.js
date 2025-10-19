@@ -27,33 +27,45 @@ function CheckoutPageContent() {
 
   // Handle success parameter from Stripe redirect
   useEffect(() => {
-    // Prevent multiple processing
-    if (hasProcessedSuccess) return;
-    
-    const success = searchParams.get('success');
-    const paymentIntentId = searchParams.get('payment_intent');
-    
-    console.log('Safari Debug - URL params:', { success, paymentIntentId, url: window.location.href, hasProcessedSuccess });
-    
-    // Check URL parameters first
-    if (success === 'true') {
-      console.log('Safari Debug - Success detected via URL params, completing order');
-      setHasProcessedSuccess(true);
-      setOrderComplete(true);
-      dispatch({ type: 'CLEAR_CART' });
-      // Clean up URL to prevent re-triggering
-      window.history.replaceState({}, '', '/checkout');
-      return;
-    }
-    
-    // Safari fallback: Check localStorage for payment success
-    const paymentSuccess = localStorage.getItem('payment_success');
-    if (paymentSuccess === 'true') {
-      console.log('Safari Debug - Success detected via localStorage, completing order');
-      setHasProcessedSuccess(true);
-      setOrderComplete(true);
-      dispatch({ type: 'CLEAR_CART' });
-      localStorage.removeItem('payment_success');
+    try {
+      // Prevent multiple processing
+      if (hasProcessedSuccess) return;
+      
+      const success = searchParams.get('success');
+      const paymentIntentId = searchParams.get('payment_intent');
+      
+      console.log('iOS Debug - URL params:', { success, paymentIntentId, url: typeof window !== 'undefined' ? window.location.href : 'SSR', hasProcessedSuccess });
+      
+      // Check URL parameters first
+      if (success === 'true') {
+        console.log('iOS Debug - Success detected via URL params, completing order');
+        setHasProcessedSuccess(true);
+        setOrderComplete(true);
+        dispatch({ type: 'CLEAR_CART' });
+        // Clean up URL to prevent re-triggering (with iOS safety check)
+        if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+          window.history.replaceState({}, '', '/checkout');
+        }
+        return;
+      }
+      
+      // iOS fallback: Check localStorage for payment success (with safety checks)
+      if (typeof window !== 'undefined' && window.localStorage) {
+        try {
+          const paymentSuccess = localStorage.getItem('payment_success');
+          if (paymentSuccess === 'true') {
+            console.log('iOS Debug - Success detected via localStorage, completing order');
+            setHasProcessedSuccess(true);
+            setOrderComplete(true);
+            dispatch({ type: 'CLEAR_CART' });
+            localStorage.removeItem('payment_success');
+          }
+        } catch (localStorageError) {
+          console.log('iOS Debug - localStorage access failed:', localStorageError);
+        }
+      }
+    } catch (error) {
+      console.error('iOS Debug - Error in success handling:', error);
     }
   }, [searchParams, dispatch, hasProcessedSuccess]);
 
@@ -256,7 +268,14 @@ function CheckoutPageContent() {
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-lg font-medium">Loading checkout...</div>
+          <div className="text-sm text-gray-500 mt-2">Please wait</div>
+        </div>
+      </div>
+    }>
       <CheckoutPageContent />
     </Suspense>
   );

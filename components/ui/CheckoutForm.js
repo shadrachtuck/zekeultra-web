@@ -74,8 +74,14 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
         setError(paymentError.message);
         onError?.(paymentError);
       } else {
-        // Set localStorage backup for Safari compatibility
-        localStorage.setItem('payment_success', 'true');
+        // Set localStorage backup for Safari/iOS compatibility (with safety checks)
+        try {
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('payment_success', 'true');
+          }
+        } catch (localStorageError) {
+          console.log('iOS Debug - localStorage set failed:', localStorageError);
+        }
         onSuccess?.();
       }
     } catch (err) {
