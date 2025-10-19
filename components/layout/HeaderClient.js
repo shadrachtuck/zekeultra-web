@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useCart } from '../store/CartContext';
 import CartWidget from '../store/CartWidget';
 import HamburgerMenu from '../ui/HamburgerMenu';
@@ -12,11 +13,14 @@ const navLinks = [
 export default function HeaderClient({ siteName }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { cart } = useCart();
+  const router = useRouter();
   
   const itemCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
 
   const handleCheckout = () => {
-    window.location.href = '/checkout';
+    console.log('iOS Debug - Cart checkout button clicked, using router.push instead of window.location.href');
+    setIsCartOpen(false); // Close cart drawer first
+    router.push('/checkout'); // Use Next.js router to avoid page reload
   };
 
   const handleCloseCart = () => {
