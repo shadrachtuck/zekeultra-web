@@ -74,6 +74,8 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
         setError(paymentError.message);
         onError?.(paymentError);
       } else {
+        // Set localStorage backup for Safari compatibility
+        localStorage.setItem('payment_success', 'true');
         onSuccess?.();
       }
     } catch (err) {

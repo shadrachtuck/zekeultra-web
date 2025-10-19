@@ -17,6 +17,7 @@ const SHIPPING_OPTIONS = [
 function CheckoutPageContent() {
   const [orderComplete, setOrderComplete] = useState(false);
   const [selectedShipping, setSelectedShipping] = useState(SHIPPING_OPTIONS[0]);
+  const [hasProcessedSuccess, setHasProcessedSuccess] = useState(false);
   const { cart, dispatch } = useCart();
   const searchParams = useSearchParams();
   
@@ -26,13 +27,35 @@ function CheckoutPageContent() {
 
   // Handle success parameter from Stripe redirect
   useEffect(() => {
+    // Prevent multiple processing
+    if (hasProcessedSuccess) return;
+    
     const success = searchParams.get('success');
+    const paymentIntentId = searchParams.get('payment_intent');
+    
+    console.log('Safari Debug - URL params:', { success, paymentIntentId, url: window.location.href, hasProcessedSuccess });
+    
+    // Check URL parameters first
     if (success === 'true') {
+      console.log('Safari Debug - Success detected via URL params, completing order');
+      setHasProcessedSuccess(true);
       setOrderComplete(true);
-      // Clear the cart after successful payment
       dispatch({ type: 'CLEAR_CART' });
+      // Clean up URL to prevent re-triggering
+      window.history.replaceState({}, '', '/checkout');
+      return;
     }
-  }, [searchParams, dispatch]);
+    
+    // Safari fallback: Check localStorage for payment success
+    const paymentSuccess = localStorage.getItem('payment_success');
+    if (paymentSuccess === 'true') {
+      console.log('Safari Debug - Success detected via localStorage, completing order');
+      setHasProcessedSuccess(true);
+      setOrderComplete(true);
+      dispatch({ type: 'CLEAR_CART' });
+      localStorage.removeItem('payment_success');
+    }
+  }, [searchParams, dispatch, hasProcessedSuccess]);
 
   const handlePaymentSuccess = () => {
     setOrderComplete(true);
