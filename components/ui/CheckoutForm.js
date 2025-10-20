@@ -185,13 +185,25 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
                       elementType: event.elementType,
                       availablePaymentMethods: event.availablePaymentMethods || 'not provided',
                       applePayAvailable: event.availablePaymentMethods?.includes?.('apple_pay') || false,
-                      googlePayAvailable: event.availablePaymentMethods?.includes?.('google_pay') || false
+                      googlePayAvailable: event.availablePaymentMethods?.includes?.('google_pay') || false,
+                      allEventProperties: Object.keys(event),
+                      eventKeys: Object.keys(event).length
                     });
+                    
+                    // Also log the actual PaymentElement element to see what's available
+                    if (elements) {
+                      const paymentElement = elements.getElement('payment');
+                      console.log('iOS Debug - PaymentElement element:', {
+                        element: !!paymentElement,
+                        elementType: paymentElement?.elementType,
+                        mounted: paymentElement?.mounted
+                      });
+                    }
                   }}
               options={{
                 wallets: {
-                  applePay: 'auto',
-                  googlePay: 'auto',
+                  applePay: 'always',
+                  googlePay: 'always',
                 },
                 layout: 'tabs',
                 paymentMethodOrder: ['apple_pay', 'google_pay', 'card'],
@@ -374,11 +386,13 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
           throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
         }
 
-        const { clientSecret: secret, paymentIntentId: id } = await response.json();
-        console.log('iOS Debug - Payment intent created successfully:', {
-          hasClientSecret: !!secret,
-          hasPaymentIntentId: !!id
-        });
+            const paymentIntentData = await response.json();
+            const { clientSecret: secret, paymentIntentId: id } = paymentIntentData;
+            console.log('iOS Debug - Payment intent created successfully:', {
+              hasClientSecret: !!secret,
+              hasPaymentIntentId: !!id,
+              fullResponse: paymentIntentData
+            });
         if (mounted && secret) {
           setClientSecret(secret);
           setPaymentIntentId(id);
