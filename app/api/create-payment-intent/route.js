@@ -124,7 +124,8 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping) {
     paymentMethodTypes: paymentIntent.payment_method_types || 'not provided',
     automaticPaymentMethods: paymentIntent.automatic_payment_methods || 'not provided',
     applePayEnabled: paymentIntent.payment_method_types?.includes('apple_pay') || false,
-    googlePayEnabled: paymentIntent.payment_method_types?.includes('google_pay') || false
+    googlePayEnabled: paymentIntent.payment_method_types?.includes('google_pay') || false,
+    fullPaymentIntent: JSON.stringify(paymentIntent, null, 2)
   });
   
   return paymentIntent;
