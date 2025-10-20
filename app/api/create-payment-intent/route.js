@@ -19,15 +19,22 @@ export async function POST(request) {
     
     const stripeApiKey = siteSettings?.data?.stripe_private_api_key;
     
+    // Check for test key override
+    const useTestKey = process.env.NEXT_PUBLIC_USE_STRIPE_TEST === 'true';
+    const testSecretKey = process.env.STRIPE_TEST_SECRET_KEY;
+    const finalApiKey = useTestKey && testSecretKey ? testSecretKey : stripeApiKey;
+    
     console.log('iOS Debug - Server payment intent creation:', {
       hasSiteSettings: !!siteSettings,
       hasStripeApiKey: !!stripeApiKey,
-      keyLength: stripeApiKey ? stripeApiKey.length : 0,
-      keyPrefix: stripeApiKey ? stripeApiKey.substring(0, 10) + '...' : 'none'
+      useTestKey,
+      hasTestSecretKey: !!testSecretKey,
+      finalKeyLength: finalApiKey ? finalApiKey.length : 0,
+      finalKeyPrefix: finalApiKey ? finalApiKey.substring(0, 10) + '...' : 'none'
     });
     
-    if (!stripeApiKey) {
-      console.error('iOS Debug - Stripe private API key not found in site settings');
+    if (!finalApiKey) {
+      console.error('iOS Debug - No Stripe private API key found (live or test)');
       return NextResponse.json(
         { error: 'Payment processing not configured' },
         { status: 500 }
@@ -35,7 +42,7 @@ export async function POST(request) {
     }
 
     // Create Stripe instance with the API key
-    const stripe = new Stripe(stripeApiKey, {
+    const stripe = new Stripe(finalApiKey, {
       apiVersion: '2024-12-18.acacia',
     });
 

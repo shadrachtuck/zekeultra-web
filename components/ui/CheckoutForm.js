@@ -247,7 +247,21 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
         });
         
         if (mounted) {
-          if (publishableKey) {
+          // Check for test key override in environment variables
+          const testPublishableKey = process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY;
+          const useTestKey = process.env.NEXT_PUBLIC_USE_STRIPE_TEST === 'true';
+          
+          if (useTestKey && testPublishableKey) {
+            console.log('iOS Debug - Using test Stripe key override:', {
+              hasTestKey: !!testPublishableKey,
+              keyLength: testPublishableKey.length,
+              keyPrefix: testPublishableKey.substring(0, 10) + '...'
+            });
+            
+            const stripe = await loadStripe(testPublishableKey);
+            console.log('iOS Debug - Test Stripe loaded successfully:', !!stripe);
+            setStripePromise(stripe);
+          } else if (publishableKey) {
             // Suppress HTTPS warning in development
             const originalConsoleWarn = console.warn;
             console.warn = (...args) => {
