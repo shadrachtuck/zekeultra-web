@@ -90,9 +90,7 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping) {
     currency,
     automatic_payment_methods: {
       enabled: true,
-      allow_redirects: 'never',
     },
-    payment_method_types: ['card', 'apple_pay', 'google_pay'],
   };
 
   // Add shipping information if provided
