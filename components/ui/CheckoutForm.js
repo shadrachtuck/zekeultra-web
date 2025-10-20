@@ -180,12 +180,14 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
           <div className="bg-transparent">
             <PaymentElement 
               onChange={handlePaymentChange}
-              onReady={(event) => {
-                console.log('iOS Debug - PaymentElement ready:', {
-                  elementType: event.elementType,
-                  availablePaymentMethods: event.availablePaymentMethods || 'not provided'
-                });
-              }}
+                  onReady={(event) => {
+                    console.log('iOS Debug - PaymentElement ready:', {
+                      elementType: event.elementType,
+                      availablePaymentMethods: event.availablePaymentMethods || 'not provided',
+                      applePayAvailable: event.availablePaymentMethods?.includes?.('apple_pay') || false,
+                      googlePayAvailable: event.availablePaymentMethods?.includes?.('google_pay') || false
+                    });
+                  }}
               options={{
                 wallets: {
                   applePay: 'auto',
@@ -410,7 +412,7 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
     theme: 'flat',
     variables: {
       colorPrimary: '#000000',
-      colorBackground: 'transparent',
+      colorBackground: '#ffffff',
       colorText: '#000000',
       colorDanger: '#ef4444',
       fontFamily: 'system-ui, -apple-system, sans-serif',
@@ -420,18 +422,17 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
     },
     rules: {
       '.AccordionItem': {
-        backgroundColor: 'transparent',
+        backgroundColor: '#ffffff',
         border: '1px solid #000000',
         borderRadius: '0px',
         boxShadow: 'none',
-        marginBottom: '8px',
       },
       '.AccordionItem:hover': {
-        backgroundColor: 'transparent',
+        backgroundColor: '#f9fafb',
         border: '1px solid #000000',
       },
       '.AccordionItem--expanded': {
-        backgroundColor: 'transparent',
+        backgroundColor: '#f9fafb',
         border: '1px solid #000000',
       },
       '.Input': {
