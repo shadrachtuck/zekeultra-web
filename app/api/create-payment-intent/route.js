@@ -91,6 +91,8 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping) {
     automatic_payment_methods: {
       enabled: true,
     },
+    // Force Apple Pay to be included
+    payment_method_types: ['card', 'apple_pay'],
   };
 
   // Add shipping information if provided
