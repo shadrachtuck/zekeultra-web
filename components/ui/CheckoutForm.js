@@ -79,7 +79,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
             },
           },
         },
-        redirect: 'never', // Prevent any redirects that would cause page reload and cart loss
+        redirect: 'if_required', // Only redirect if payment method requires it (most don't)
       });
 
       if (paymentError) {
