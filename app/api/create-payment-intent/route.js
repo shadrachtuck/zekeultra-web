@@ -24,14 +24,15 @@ export async function POST(request) {
     const testSecretKey = process.env.STRIPE_TEST_SECRET_KEY;
     const finalApiKey = useTestKey && testSecretKey ? testSecretKey : stripeApiKey;
     
-    console.log('iOS Debug - Server payment intent creation:', {
-      hasSiteSettings: !!siteSettings,
-      hasStripeApiKey: !!stripeApiKey,
-      useTestKey,
-      hasTestSecretKey: !!testSecretKey,
-      finalKeyLength: finalApiKey ? finalApiKey.length : 0,
-      finalKeyPrefix: finalApiKey ? finalApiKey.substring(0, 10) + '...' : 'none'
-    });
+        console.log('iOS Debug - Server payment intent creation:', {
+          hasSiteSettings: !!siteSettings,
+          hasStripeApiKey: !!stripeApiKey,
+          useTestKey,
+          hasTestSecretKey: !!testSecretKey,
+          finalKeyLength: finalApiKey ? finalApiKey.length : 0,
+          finalKeyPrefix: finalApiKey ? finalApiKey.substring(0, 10) + '...' : 'none',
+          accountId: finalApiKey ? finalApiKey.split('_')[2] : 'none'
+        });
     
     if (!finalApiKey) {
       console.error('iOS Debug - No Stripe private API key found (live or test)');
@@ -121,7 +122,9 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping) {
     status: paymentIntent.status,
     clientSecret: paymentIntent.client_secret ? 'present' : 'missing',
     paymentMethodTypes: paymentIntent.payment_method_types || 'not provided',
-    automaticPaymentMethods: paymentIntent.automatic_payment_methods || 'not provided'
+    automaticPaymentMethods: paymentIntent.automatic_payment_methods || 'not provided',
+    applePayEnabled: paymentIntent.payment_method_types?.includes('apple_pay') || false,
+    googlePayEnabled: paymentIntent.payment_method_types?.includes('google_pay') || false
   });
   
   return paymentIntent;
