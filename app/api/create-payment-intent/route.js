@@ -124,6 +124,8 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping) {
     automatic_payment_methods: {
       enabled: true,
     },
+    // Use the payment method configuration that has Apple Pay enabled
+    payment_method_configuration: 'pmc_1SJJJTAmL1rpru9Ek1z2tMo9',
   };
 
   // Add shipping information if provided
