@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 
 export async function POST(request) {
   try {
-    const { amount, currency = 'usd', shipping, paymentIntentId } = await request.json();
+    const { amount, currency = 'usd', shipping, paymentIntentId, cartItems = [] } = await request.json();
 
     if (!amount) {
       return NextResponse.json(
@@ -52,11 +52,11 @@ export async function POST(request) {
       } catch (updateError) {
         console.error('Error updating payment intent, creating new one:', updateError);
         // If update fails, create a new one
-        paymentIntent = await createNewPaymentIntent(stripe, amount, currency, shipping);
+        paymentIntent = await createNewPaymentIntent(stripe, amount, currency, shipping, cartItems);
       }
     } else {
       // Create a new payment intent
-      paymentIntent = await createNewPaymentIntent(stripe, amount, currency, shipping);
+      paymentIntent = await createNewPaymentIntent(stripe, amount, currency, shipping, cartItems);
     }
 
     return NextResponse.json({
@@ -78,7 +78,7 @@ export async function POST(request) {
   }
 }
 
-async function createNewPaymentIntent(stripe, amount, currency, shipping) {
+async function createNewPaymentIntent(stripe, amount, currency, shipping, cartItems = []) {
   const paymentIntentOptions = {
     amount,
     currency,
@@ -102,6 +102,37 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping) {
         country: shipping.address.country,
       },
     };
+  }
+
+  // Add cart items as metadata (Stripe metadata values must be strings)
+  if (cartItems && cartItems.length > 0) {
+    const metadata = {};
+    
+    cartItems.forEach((item, index) => {
+      // Stripe metadata keys have a limit of 40 characters and values 500 characters
+      const prefix = `item_${index + 1}`;
+      metadata[`${prefix}_name`] = String(item.name || '').substring(0, 500);
+      metadata[`${prefix}_price`] = String(item.price || '');
+      metadata[`${prefix}_quantity`] = String(item.quantity || 1);
+      
+      // Include variant information (e.g., shirt size)
+      if (item.variant) {
+        metadata[`${prefix}_variant`] = String(item.variant).substring(0, 500);
+      }
+      if (item.variantType) {
+        metadata[`${prefix}_variant_type`] = String(item.variantType).substring(0, 500);
+      }
+      
+      // Include product ID if available
+      if (item.id) {
+        metadata[`${prefix}_product_id`] = String(item.id).substring(0, 500);
+      }
+    });
+    
+    // Add total item count
+    metadata.total_items = String(cartItems.length);
+    
+    paymentIntentOptions.metadata = metadata;
   }
 
   try {

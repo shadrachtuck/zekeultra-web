@@ -199,7 +199,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
   );
 };
 
-export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
+export default function CheckoutFormWrapper({ amount, cartItems = [], onSuccess, onError }) {
   const [stripePromise, setStripePromise] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -266,7 +266,6 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
         setIsLoading(true);
         
         // Create or update payment intent
-        console.log('iOS Debug - Creating payment intent with amount:', amount);
         const response = await fetch('/api/create-payment-intent', {
           method: 'POST',
           headers: {
@@ -275,6 +274,7 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
           body: JSON.stringify({ 
             amount,
             paymentIntentId: paymentIntentId, // Send existing ID if we have one
+            cartItems: cartItems, // Include cart items with variants/metadata
           }),
         });
 
@@ -310,12 +310,14 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
       }
     };
 
-    updatePaymentIntent();
+    if (amount > 0 && stripePromise) {
+      updatePaymentIntent();
+    }
     
     return () => {
       mounted = false;
     };
-  }, [amount, paymentIntentId]); // Re-run when amount changes
+  }, [amount, stripePromise, paymentIntentId, cartItems]); // Re-run when amount or cart changes
 
   if (isLoading || !clientSecret) {
     return <div className="text-center py-8">Loading payment form...</div>;

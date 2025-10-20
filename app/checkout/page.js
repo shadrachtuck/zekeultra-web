@@ -268,7 +268,8 @@ function CheckoutPageContent() {
             <div>
               <h4 className="font-bold mb-6">Shipping & Payment</h4>
               <CheckoutForm 
-                amount={total} 
+                amount={total}
+                cartItems={cart.items}
                 onSuccess={handlePaymentSuccess} 
                 onError={handlePaymentError} 
               />
