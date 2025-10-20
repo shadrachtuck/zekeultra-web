@@ -60,7 +60,24 @@ export async function POST(request) {
             payouts_enabled: account.payouts_enabled
           });
         } catch (accountError) {
-          console.error('iOS Debug - Error fetching account info:', accountError.message);
+          console.error('iOS Debug - Error fetching account info:', {
+            message: accountError.message,
+            type: accountError.type,
+            code: accountError.code,
+            fullError: JSON.stringify(accountError, null, 2)
+          });
+        }
+        
+        // Also check payment method configurations
+        try {
+          const paymentMethodConfigs = await stripe.paymentMethodConfigurations.list({ limit: 1 });
+          console.log('iOS Debug - Payment method configurations:', {
+            count: paymentMethodConfigs.data.length,
+            firstConfig: paymentMethodConfigs.data[0] || 'none',
+            applePayConfig: paymentMethodConfigs.data[0]?.apple_pay || 'not found'
+          });
+        } catch (configError) {
+          console.error('iOS Debug - Error fetching payment method configs:', configError.message);
         }
 
     let paymentIntent;
