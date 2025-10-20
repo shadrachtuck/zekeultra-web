@@ -119,7 +119,9 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping) {
   console.log('iOS Debug - Payment intent created:', {
     id: paymentIntent.id,
     status: paymentIntent.status,
-    clientSecret: paymentIntent.client_secret ? 'present' : 'missing'
+    clientSecret: paymentIntent.client_secret ? 'present' : 'missing',
+    paymentMethodTypes: paymentIntent.payment_method_types || 'not provided',
+    automaticPaymentMethods: paymentIntent.automatic_payment_methods || 'not provided'
   });
   
   return paymentIntent;
