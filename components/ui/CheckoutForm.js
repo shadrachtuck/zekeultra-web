@@ -27,7 +27,6 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       const isMobile = /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
       setIsIOSMobile(isIOS && isMobile);
-      console.log('iOS Debug - CheckoutForm device detection:', { isIOS, isMobile, isIOSMobile: isIOS && isMobile });
     }
   }, []);
 
@@ -91,23 +90,13 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
         const isMobile = typeof window !== 'undefined' ? (/Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 768) : false;
         const detectedIOSMobile = isIOS && isMobile;
         
-        console.log('iOS Debug - Payment successful, calling onSuccess', { 
-          isIOSMobile, 
-          detectedIOSMobile, 
-          isIOS, 
-          isMobile 
-        });
-        
         // For iOS mobile, add extra validation before calling success
         if (detectedIOSMobile) {
-          console.log('iOS Debug - iOS mobile payment success, validating before callback');
           // Double-check that we actually have a successful payment
           setTimeout(() => {
-            console.log('iOS Debug - iOS mobile delayed success callback');
             onSuccess?.();
           }, 500); // Small delay for iOS
         } else {
-          console.log('iOS Debug - Non-iOS mobile, calling success immediately');
           onSuccess?.();
         }
       }
@@ -120,13 +109,6 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
   };
 
   const handlePaymentChange = (event) => {
-    console.log('iOS Debug - PaymentElement change event:', {
-      complete: event.complete,
-      empty: event.empty,
-      value: event.value,
-      elementType: event.elementType,
-      error: event.error
-    });
     setHasPaymentInfo(event.complete);
   };
 
@@ -177,39 +159,19 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
           <label className="block font-medium text-black mb-4">
             Payment Information
           </label>
-          <div className="bg-transparent">
-            <PaymentElement 
-              onChange={handlePaymentChange}
-                  onReady={(event) => {
-                    console.log('iOS Debug - PaymentElement ready:', {
-                      elementType: event.elementType,
-                      availablePaymentMethods: event.availablePaymentMethods || 'not provided',
-                      applePayAvailable: event.availablePaymentMethods?.includes?.('apple_pay') || false,
-                      googlePayAvailable: event.availablePaymentMethods?.includes?.('google_pay') || false,
-                      allEventProperties: Object.keys(event),
-                      eventKeys: Object.keys(event).length
-                    });
-                    
-                    // Also log the actual PaymentElement element to see what's available
-                    if (elements) {
-                      const paymentElement = elements.getElement('payment');
-                      console.log('iOS Debug - PaymentElement element:', {
-                        element: !!paymentElement,
-                        elementType: paymentElement?.elementType,
-                        mounted: paymentElement?.mounted
-                      });
-                    }
+              <div className="bg-transparent">
+                <PaymentElement 
+                  onChange={handlePaymentChange}
+                  options={{
+                    wallets: {
+                      applePay: 'auto',
+                      googlePay: 'auto',
+                    },
+                    layout: 'tabs',
+                    paymentMethodOrder: ['apple_pay', 'google_pay', 'card'],
                   }}
-              options={{
-                wallets: {
-                  applePay: 'auto',
-                  googlePay: 'auto',
-                },
-                layout: 'tabs',
-                paymentMethodOrder: ['apple_pay', 'google_pay', 'card'],
-              }}
-            />
-          </div>
+                />
+              </div>
         </div>
         
         {error && (
@@ -254,83 +216,25 @@ export default function CheckoutFormWrapper({ amount, onSuccess, onError }) {
         
         const publishableKey = siteSettings?.data?.stripe_public_api_key;
         
-        console.log('iOS Debug - Stripe initialization:', {
-          hasPublishableKey: !!publishableKey,
-          keyLength: publishableKey ? publishableKey.length : 0,
-          keyPrefix: publishableKey ? publishableKey.substring(0, 10) + '...' : 'none'
-        });
-        
         if (mounted) {
           // Check for test key override in environment variables
           const testPublishableKey = process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY;
           const useTestKey = process.env.NEXT_PUBLIC_USE_STRIPE_TEST === 'true';
           
           if (useTestKey && testPublishableKey) {
-            console.log('iOS Debug - Using test Stripe key override:', {
-              hasTestKey: !!testPublishableKey,
-              keyLength: testPublishableKey.length,
-              keyPrefix: testPublishableKey.substring(0, 10) + '...'
-            });
-            
             const stripe = await loadStripe(testPublishableKey);
-            console.log('iOS Debug - Test Stripe loaded successfully:', !!stripe);
             setStripePromise(stripe);
           } else if (publishableKey) {
-            // Suppress HTTPS warning in development
-            const originalConsoleWarn = console.warn;
-            console.warn = (...args) => {
-              if (args[0]?.includes?.('You may test your Stripe.js integration over HTTP')) {
-                return; // Suppress this specific warning
-              }
-              originalConsoleWarn.apply(console, args);
-            };
-            
             const stripe = await loadStripe(publishableKey);
-            console.log('iOS Debug - Stripe loaded successfully:', !!stripe);
-            
-            // Test if the publishable key is valid by making a test call
-            if (stripe) {
-              try {
-                // This will help us verify if the key is working
-                console.log('iOS Debug - Testing Stripe key validity...');
-                // We can't test the key directly, but we can check if it's properly formatted
-                const isTestKey = publishableKey.startsWith('pk_test_');
-                const isLiveKey = publishableKey.startsWith('pk_live_');
-                console.log('iOS Debug - Stripe key type:', { isTestKey, isLiveKey, keyLength: publishableKey.length });
-              } catch (keyError) {
-                console.error('iOS Debug - Stripe key validation error:', keyError);
-              }
-            }
-            
             setStripePromise(stripe);
-            
-            // Restore console.warn after a short delay
-            setTimeout(() => {
-              console.warn = originalConsoleWarn;
-            }, 1000);
           } else {
             // Fallback to environment variable
             const envKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-            console.log('iOS Debug - Using fallback Stripe key:', {
-              hasEnvKey: !!envKey,
-              keyLength: envKey ? envKey.length : 0
-            });
             if (envKey) {
               const stripe = await loadStripe(envKey);
-              console.log('iOS Debug - Fallback Stripe loaded successfully:', !!stripe);
               setStripePromise(stripe);
             } else {
-              console.error('iOS Debug - No Stripe publishable key found in site settings or environment');
-              // Try test key as last resort for debugging
-              const testKey = 'pk_test_51234567890abcdef'; // This is a dummy test key
-              console.log('iOS Debug - Attempting to use test key for debugging...');
-              try {
-                const testStripe = await loadStripe(testKey);
-                console.log('iOS Debug - Test Stripe loaded:', !!testStripe);
-                // Don't actually use it, just test loading
-              } catch (testError) {
-                console.log('iOS Debug - Test key failed as expected:', testError.message);
-              }
+              console.error('No Stripe publishable key found');
             }
           }
         }

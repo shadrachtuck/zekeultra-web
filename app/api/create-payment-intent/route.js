@@ -24,18 +24,10 @@ export async function POST(request) {
     const testSecretKey = process.env.STRIPE_TEST_SECRET_KEY;
     const finalApiKey = useTestKey && testSecretKey ? testSecretKey : stripeApiKey;
     
-        console.log('iOS Debug - Server payment intent creation:', {
-          hasSiteSettings: !!siteSettings,
-          hasStripeApiKey: !!stripeApiKey,
-          useTestKey,
-          hasTestSecretKey: !!testSecretKey,
-          finalKeyLength: finalApiKey ? finalApiKey.length : 0,
-          finalKeyPrefix: finalApiKey ? finalApiKey.substring(0, 10) + '...' : 'none',
-          accountId: finalApiKey ? finalApiKey.split('_')[2] : 'none'
-        });
+    // Removed debug logging - Apple Pay now working
     
     if (!finalApiKey) {
-      console.error('iOS Debug - No Stripe private API key found (live or test)');
+      console.error('No Stripe private API key found');
       return NextResponse.json(
         { error: 'Payment processing not configured' },
         { status: 500 }
@@ -47,38 +39,7 @@ export async function POST(request) {
           apiVersion: '2024-12-18.acacia',
         });
         
-        // Check account capabilities for Apple Pay
-        try {
-          const account = await stripe.accounts.retrieve();
-          console.log('iOS Debug - Stripe account info:', {
-            id: account.id,
-            country: account.country,
-            capabilities: account.capabilities,
-            applePayCapability: account.capabilities?.apple_pay || 'not found',
-            cardPaymentsCapability: account.capabilities?.card_payments || 'not found',
-            charges_enabled: account.charges_enabled,
-            payouts_enabled: account.payouts_enabled
-          });
-        } catch (accountError) {
-          console.error('iOS Debug - Error fetching account info:', {
-            message: accountError.message,
-            type: accountError.type,
-            code: accountError.code,
-            fullError: JSON.stringify(accountError, null, 2)
-          });
-        }
-        
-        // Also check payment method configurations
-        try {
-          const paymentMethodConfigs = await stripe.paymentMethodConfigurations.list({ limit: 1 });
-          console.log('iOS Debug - Payment method configurations:', {
-            count: paymentMethodConfigs.data.length,
-            firstConfig: paymentMethodConfigs.data[0] || 'none',
-            applePayConfig: paymentMethodConfigs.data[0]?.apple_pay || 'not found'
-          });
-        } catch (configError) {
-          console.error('iOS Debug - Error fetching payment method configs:', configError.message);
-        }
+        // Removed debug logging - Apple Pay now working
 
     let paymentIntent;
 
@@ -143,35 +104,14 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping) {
     };
   }
 
-  console.log('iOS Debug - Creating payment intent with options:', {
-    amount: paymentIntentOptions.amount,
-    currency: paymentIntentOptions.currency,
-    hasAutomaticPaymentMethods: !!paymentIntentOptions.automatic_payment_methods,
-    hasShipping: !!paymentIntentOptions.shipping
-  });
-  
   try {
     const paymentIntent = await stripe.paymentIntents.create(paymentIntentOptions);
-    
-    console.log('iOS Debug - Payment intent created:', {
-      id: paymentIntent.id,
-      status: paymentIntent.status,
-      clientSecret: paymentIntent.client_secret ? 'present' : 'missing',
-      paymentMethodTypes: paymentIntent.payment_method_types || 'not provided',
-      automaticPaymentMethods: paymentIntent.automatic_payment_methods || 'not provided',
-      applePayEnabled: paymentIntent.payment_method_types?.includes('apple_pay') || false,
-      googlePayEnabled: paymentIntent.payment_method_types?.includes('google_pay') || false,
-    });
-    
     return paymentIntent;
   } catch (error) {
-    console.error('iOS Debug - Stripe API error creating payment intent:', {
+    console.error('Error creating payment intent:', {
       message: error.message,
       type: error.type,
       code: error.code,
-      param: error.param,
-      statusCode: error.statusCode,
-      rawError: error.raw || error
     });
     throw error;
   }
