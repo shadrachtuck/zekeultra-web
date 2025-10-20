@@ -85,9 +85,15 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping, cartIt
     automatic_payment_methods: {
       enabled: true,
     },
-    // Use the payment method configuration that has Apple Pay enabled
-    payment_method_configuration: 'pmc_1SJJJTAmL1rpru9Ek1z2tMo9',
   };
+  
+  // Only use payment method configuration in production (live keys)
+  // Test mode doesn't need this specific configuration
+  const useTestKey = process.env.NEXT_PUBLIC_USE_STRIPE_TEST === 'true';
+  if (!useTestKey) {
+    // Use the payment method configuration that has Apple Pay enabled (live only)
+    paymentIntentOptions.payment_method_configuration = 'pmc_1SJJJTAmL1rpru9Ek1z2tMo9';
+  }
 
   // Add shipping information if provided
   if (shipping) {
@@ -133,6 +139,9 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping, cartIt
     metadata.total_items = String(cartItems.length);
     
     paymentIntentOptions.metadata = metadata;
+    
+    // Log metadata for testing
+    console.log('💳 Payment Intent Metadata:', JSON.stringify(metadata, null, 2));
   }
 
   try {
