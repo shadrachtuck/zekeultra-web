@@ -42,10 +42,26 @@ export async function POST(request) {
       );
     }
 
-    // Create Stripe instance with the API key
-    const stripe = new Stripe(finalApiKey, {
-      apiVersion: '2024-12-18.acacia',
-    });
+        // Create Stripe instance with the API key
+        const stripe = new Stripe(finalApiKey, {
+          apiVersion: '2024-12-18.acacia',
+        });
+        
+        // Check account capabilities for Apple Pay
+        try {
+          const account = await stripe.accounts.retrieve();
+          console.log('iOS Debug - Stripe account info:', {
+            id: account.id,
+            country: account.country,
+            capabilities: account.capabilities,
+            applePayCapability: account.capabilities?.apple_pay || 'not found',
+            cardPaymentsCapability: account.capabilities?.card_payments || 'not found',
+            charges_enabled: account.charges_enabled,
+            payouts_enabled: account.payouts_enabled
+          });
+        } catch (accountError) {
+          console.error('iOS Debug - Error fetching account info:', accountError.message);
+        }
 
     let paymentIntent;
 
@@ -115,18 +131,29 @@ async function createNewPaymentIntent(stripe, amount, currency, shipping) {
     hasShipping: !!paymentIntentOptions.shipping
   });
   
-  const paymentIntent = await stripe.paymentIntents.create(paymentIntentOptions);
-  
-  console.log('iOS Debug - Payment intent created:', {
-    id: paymentIntent.id,
-    status: paymentIntent.status,
-    clientSecret: paymentIntent.client_secret ? 'present' : 'missing',
-    paymentMethodTypes: paymentIntent.payment_method_types || 'not provided',
-    automaticPaymentMethods: paymentIntent.automatic_payment_methods || 'not provided',
-    applePayEnabled: paymentIntent.payment_method_types?.includes('apple_pay') || false,
-    googlePayEnabled: paymentIntent.payment_method_types?.includes('google_pay') || false,
-    fullPaymentIntent: JSON.stringify(paymentIntent, null, 2)
-  });
-  
-  return paymentIntent;
+  try {
+    const paymentIntent = await stripe.paymentIntents.create(paymentIntentOptions);
+    
+    console.log('iOS Debug - Payment intent created:', {
+      id: paymentIntent.id,
+      status: paymentIntent.status,
+      clientSecret: paymentIntent.client_secret ? 'present' : 'missing',
+      paymentMethodTypes: paymentIntent.payment_method_types || 'not provided',
+      automaticPaymentMethods: paymentIntent.automatic_payment_methods || 'not provided',
+      applePayEnabled: paymentIntent.payment_method_types?.includes('apple_pay') || false,
+      googlePayEnabled: paymentIntent.payment_method_types?.includes('google_pay') || false,
+    });
+    
+    return paymentIntent;
+  } catch (error) {
+    console.error('iOS Debug - Stripe API error creating payment intent:', {
+      message: error.message,
+      type: error.type,
+      code: error.code,
+      param: error.param,
+      statusCode: error.statusCode,
+      rawError: error.raw || error
+    });
+    throw error;
+  }
 } 
