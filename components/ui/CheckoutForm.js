@@ -202,8 +202,8 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
                   }}
               options={{
                 wallets: {
-                  applePay: 'always',
-                  googlePay: 'always',
+                  applePay: 'auto',
+                  googlePay: 'auto',
                 },
                 layout: 'tabs',
                 paymentMethodOrder: ['apple_pay', 'google_pay', 'card'],
