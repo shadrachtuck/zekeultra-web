@@ -11,8 +11,11 @@ export default async function Footer() {
       <footer className="py-4 mt-8 px-2 border-t ">
         <div className="container mx-auto flex flex-col md:flex-row justify-center items-center">
           {/* //<div className="flex flex-col md:flex-row justify-center items-center"> */}
-            <div className="md:mb-0 text-sm text-gray-500 mt-4">
-              © {new Date().getFullYear()} ZekeUltra; Mishap Creative Works 
+            <div className="md:mb-0 text-sm text-gray-500 mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+              <span>© {new Date().getFullYear()} ZekeUltra; Mishap Creative Works</span>
+              <Link href="/contact" className="hover:opacity-70 transition-opacity underline-offset-2 hover:underline">
+                Contact
+              </Link>
             </div>
             
             {settings.data.social_links && settings.data.social_links.length > 0 && (

@@ -1,107 +1,92 @@
 # Email Contact Form Setup Guide
 
-This guide will help you set up the email contact form to send messages to Zeke's email address.
+This guide will help you set up the contact form to send messages via **Elastic Email**.
 
 ## Overview
 
-The contact form uses **Resend** (a modern email API) to send emails. It's reliable, has a generous free tier (3,000 emails/month), and is easy to set up.
+The contact form posts to `/api/contact`, which sends a transactional email through the [Elastic Email REST API v4](https://elasticemail.com/developers/api-documentation/rest-api).
 
-## Step 1: Sign Up for Resend
+## Step 1: Elastic Email account
 
-1. Go to [resend.com](https://resend.com)
-2. Sign up for a free account
-3. Verify your email address
+1. Sign up at [elasticemail.com](https://elasticemail.com)
+2. Verify your email address
+3. Add and verify your sending domain (required for production)
 
-## Step 2: Get Your API Key
+## Step 2: Create an API key
 
-1. After signing up, go to your [Resend Dashboard](https://resend.com/api-keys)
-2. Click "Create API Key"
-3. Give it a name like "ZekeUltra Contact Form"
-4. Copy the API key (starts with `re_`)
+1. Open **Settings → API** in the Elastic Email dashboard
+2. Create a key with **SendHttp** permission (transactional sending)
+3. Copy the key immediately (shown only once)
 
-## Step 3: Add Environment Variable
+## Step 3: Environment variables
 
-Create or update your `.env.local` file in the project root:
+Add these to `.env.local` (local) and Vercel project settings (production):
 
 ```env
-# Resend Email API
-RESEND_API_KEY=re_your_api_key_here
+ELASTIC_EMAIL_API_KEY=your_api_key_here
+ELASTIC_EMAIL_FROM=ZekeUltra Website <noreply@yourdomain.com>
 ```
 
-## Step 4: Configure Sender Domain (Optional but Recommended)
+- `ELASTIC_EMAIL_FROM` must use an address on a domain you verified in Elastic Email
+- The display name is optional; the angle-bracket format is standard
 
-For production, you should verify your domain with Resend:
+## Step 4: Recipient email in Prismic
 
-1. In your Resend dashboard, go to "Domains"
-2. Add your domain (e.g., `yourdomain.com`)
-3. Follow the DNS verification steps
-4. Update the `from` email in `app/api/contact/route.js`:
+Submissions are delivered to the address configured in Prismic:
 
-```javascript
-from: 'ZekeUltra Website <noreply@yourdomain.com>'
-```
+1. **Contact** document → `contact_email`, or
+2. **Site Settings** → `contact_email`
 
-For development/testing, you can use Resend's sandbox domain:
-```javascript
-from: 'ZekeUltra Website <onboarding@resend.dev>'
-```
+If neither is set, the API falls back to `zekecantmiss@gmail.com`.
 
-## Step 5: Configure Zeke's Email in Prismic
+## Step 5: Expose the form on the site
 
-1. Go to your Prismic dashboard
-2. Navigate to "Site Settings" document
-3. Add Zeke's email address to the "Contact Email" field
-4. This is where all contact form submissions will be sent
+The contact form is available in two places:
 
-## Step 6: Test the Contact Form
+1. **`/contact`** — dedicated page (linked from the header menu)
+2. **Contact slice** — add a Contact slice to the homepage (or any page) in Prismic Slice Machine
 
-1. Start your development server: `npm run dev`
-2. Navigate to `/contact`
-3. Fill out and submit the form
-4. Check Zeke's email for the message
+Label copy for the slice comes from the slice fields in Prismic.
+
+## Step 6: Test
+
+1. `npm run dev`
+2. Visit `/contact` or the homepage section with the Contact slice
+3. Submit the form and confirm the message arrives at the Prismic recipient address
 
 ## Features
 
-✅ **Form Validation**: Validates required fields and email format
-✅ **Success/Error Messages**: Shows clear feedback to users
-✅ **Spam Protection**: Built-in validation and rate limiting
-✅ **Reply-To**: Zeke can reply directly to the sender's email
-✅ **Prismic Integration**: All text and settings managed through CMS
-✅ **Responsive Design**: Works on all devices
-
-## Email Template
-
-The email includes:
-- Sender's name and email
-- Their message
-- Professional formatting
-- Reply-to functionality
+- Field validation and sanitization
+- Rate limiting (5 submissions per IP per 15 minutes)
+- Basic spam keyword filter
+- Reply-To set to the visitor’s email
+- Success/error messages from Prismic where configured
 
 ## Troubleshooting
 
-### Emails Not Sending
-- Check your `RESEND_API_KEY` is correct
-- Verify the API key has proper permissions
-- Check the browser console for errors
+### "Email service not configured"
 
-### Domain Verification Issues
-- Ensure DNS records are properly configured
-- Wait up to 24 hours for DNS propagation
-- Use the sandbox domain for testing
+- Set both `ELASTIC_EMAIL_API_KEY` and `ELASTIC_EMAIL_FROM` in your environment
+- Restart the dev server after changing `.env.local`
 
-### Rate Limiting
-- Free tier: 3,000 emails/month
-- Upgrade plan if you need more
+### Elastic Email returns 4xx
 
-## Security Notes
+- Confirm the API key has **SendHttp** access
+- Confirm `ELASTIC_EMAIL_FROM` uses a verified domain
+- Check server logs for the raw Elastic Email error body
 
-- Never commit your `.env.local` file to version control
-- The API key is only used server-side
-- Form validation prevents spam and malicious input
-- Email addresses are validated before sending
+### Form works locally but not on Vercel
+
+- Add the same env vars in Vercel → Project → Settings → Environment Variables
+- Redeploy after adding variables
+
+## Security
+
+- Never commit `.env.local` or API keys to git
+- Keys are only used server-side in the API route
+- Rate limiting and validation reduce abuse
 
 ## Support
 
-- [Resend Documentation](https://resend.com/docs)
-- [Resend Support](https://resend.com/support)
-- Check the browser console for detailed error messages 
+- [Elastic Email API docs](https://elasticemail.com/developers/api-documentation/rest-api)
+- [Elastic Email help center](https://help.elasticemail.com/)

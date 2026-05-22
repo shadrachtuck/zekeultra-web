@@ -9,7 +9,7 @@ export default function Layout({ children }) {
       <div className="min-h-screen flex flex-col">
         <Header />
         {/* <BackgroundVideo /> */}
-        <main className="flex-1 z-10 bg-transparent relative flex items-center">
+        <main className="flex-1 z-10 bg-transparent relative flex items-start">
           <div className="w-full">
             {children}
           </div>

@@ -4,9 +4,6 @@ import BandsintownEventItem from '../components/ui/BandsintownEventItem';
 import BandsintownWidget from '../components/ui/BandsintownWidget';
 import { SliceZone } from '@prismicio/react';
 import { components } from '../slices';
-import { PrismicRichText } from '@prismicio/react';
-import ContactForm from '../components/ui/ContactForm';
-
 export default async function Home() {
   const client = createClient();
 
@@ -54,15 +51,6 @@ export default async function Home() {
     } catch (error) {
       tourError = error;
     }
-
-  // CONTACT SECTION
-  let contactData = null;
-  try {
-    const page = await client.getSingle('contact');
-    contactData = page.data;
-  } catch (error) {
-    contactData = null;
-  }
 
   return (
     <div className="py-6 md:py-24">

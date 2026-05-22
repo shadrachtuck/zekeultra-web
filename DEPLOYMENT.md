@@ -37,7 +37,8 @@ Add the following variables:
 - `NEXT_PUBLIC_PRISMIC_ENDPOINT` - Your Prismic endpoint URL
 - `NEXT_PUBLIC_PRISMIC_ACCESS_TOKEN` - Your Prismic access token
 - `STRIPE_SECRET_KEY` - Your Stripe secret key
-- `RESEND_API_KEY` - Your Resend API key
+- `ELASTIC_EMAIL_API_KEY` - Your Elastic Email API key (SendHttp permission)
+- `ELASTIC_EMAIL_FROM` - Verified sender, e.g. `ZekeUltra Website <noreply@yourdomain.com>`
 
 #### Preview Environment (Development):
 - Same variables as production
@@ -48,13 +49,15 @@ Add the following variables:
 vercel env add NEXT_PUBLIC_PRISMIC_ENDPOINT production
 vercel env add NEXT_PUBLIC_PRISMIC_ACCESS_TOKEN production
 vercel env add STRIPE_SECRET_KEY production
-vercel env add RESEND_API_KEY production
+vercel env add ELASTIC_EMAIL_API_KEY production
+vercel env add ELASTIC_EMAIL_FROM production
 
 # Preview (Development)
 vercel env add NEXT_PUBLIC_PRISMIC_ENDPOINT preview
 vercel env add NEXT_PUBLIC_PRISMIC_ACCESS_TOKEN preview
 vercel env add STRIPE_SECRET_KEY preview
-vercel env add RESEND_API_KEY preview
+vercel env add ELASTIC_EMAIL_API_KEY preview
+vercel env add ELASTIC_EMAIL_FROM preview
 ```
 
 ## Deployment Commands

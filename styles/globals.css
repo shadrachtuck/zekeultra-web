@@ -145,6 +145,20 @@ body {
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
 }
 
+.page-container {
+  padding-top: 5.5rem;
+  padding-bottom: 3rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding-top: 6.5rem;
+    padding-bottom: 4rem;
+  }
+}
+
 /* Responsive header font size */
   .header-logo {
     font-size: xx-large;

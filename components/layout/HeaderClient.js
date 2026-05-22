@@ -7,7 +7,8 @@ import HamburgerMenu from '../ui/HamburgerMenu';
 import CloseIcon from '../ui/CloseIcon';
 
 const navLinks = [
-  { href: '#store', label: 'Store' },
+  { href: '/store', label: 'Store' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function HeaderClient({ siteName }) {
