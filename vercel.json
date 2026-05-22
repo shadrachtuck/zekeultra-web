@@ -6,10 +6,7 @@
   "framework": "nextjs",
   "env": {
     "NEXT_PUBLIC_PRISMIC_ENDPOINT": "https://zekeultra-web.prismic.io/api/v2",
-    "NEXT_PUBLIC_PRISMIC_ACCESS_TOKEN": "",
-    "STRIPE_SECRET_KEY": "",
-    "ELASTIC_EMAIL_API_KEY": "",
-    "ELASTIC_EMAIL_FROM": ""
+    "NEXT_PUBLIC_PRISMIC_ACCESS_TOKEN": ""
   },
   "build": {
     "env": {
