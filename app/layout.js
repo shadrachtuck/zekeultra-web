@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import '../styles/globals.css';
 import Layout from '../components/layout/Layout';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} ${brigendsExpanded.variable}`}>
         <Layout>{children}</Layout>
+        <SpeedInsights />
       </body>
     </html>
   );
