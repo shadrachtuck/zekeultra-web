@@ -11,11 +11,18 @@ import { useSearchParams } from 'next/navigation';
 const SHIPPING_OPTIONS = [
   // { id: 'free', name: 'Free Shipping', price: 0, days: '5-7 business days' },
   { id: 'standard', name: 'Standard Shipping', price: 500, days: '3-5 business days' },
-  { id: 'express', name: 'Express Shipping', price: 1500, days: '1-2 business days' },
+  // { id: 'express', name: 'Express Shipping', price: 1500, days: '1-2 business days' },
 ];
+
+function pickStripeStandardRate(rates = []) {
+  if (!rates.length) return null;
+  return rates.find((rate) => /standard/i.test(rate.name || ''))
+    || [...rates].sort((a, b) => a.price - b.price)[0];
+}
 
 function CheckoutPageContent() {
   const [orderComplete, setOrderComplete] = useState(false);
+  const [shippingOptions, setShippingOptions] = useState(SHIPPING_OPTIONS);
   const [selectedShipping, setSelectedShipping] = useState(SHIPPING_OPTIONS[0]);
   const [hasProcessedSuccess, setHasProcessedSuccess] = useState(false);
   const [isIOSMobile, setIsIOSMobile] = useState(false);
@@ -25,6 +32,41 @@ function CheckoutPageContent() {
   const subtotal = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shippingCost = selectedShipping.price;
   const total = subtotal + shippingCost;
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadStripeShipping = async () => {
+      try {
+        const response = await fetch('/api/shipping-rates');
+        if (!response.ok) return;
+        const data = await response.json();
+        const stripeRate = pickStripeStandardRate(data.rates);
+        if (!mounted || !stripeRate) return;
+
+        const updatedOptions = SHIPPING_OPTIONS.map((option) => (
+          option.id === 'standard'
+            ? {
+                ...option,
+                name: stripeRate.name || option.name,
+                price: stripeRate.price,
+                days: stripeRate.days || option.days,
+              }
+            : option
+        ));
+
+        setShippingOptions(updatedOptions);
+        setSelectedShipping(updatedOptions.find((option) => option.id === 'standard') || updatedOptions[0]);
+      } catch (error) {
+        console.error('Error loading Stripe shipping rates:', error);
+      }
+    };
+
+    loadStripeShipping();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Detect iOS mobile - run immediately on client side
   useEffect(() => {
@@ -215,7 +257,7 @@ function CheckoutPageContent() {
               {/* Shipping Options */}
               <div className="space-y-3 border-t border-white/20 pt-4">
                 <h4 className="font-bold text-black">Select Shipping Method</h4>
-                {SHIPPING_OPTIONS.map((option) => (
+                {shippingOptions.map((option) => (
                   <label
                     key={option.id}
                     className={`flex items-center justify-between p-3 border cursor-pointer transition-colors ${
