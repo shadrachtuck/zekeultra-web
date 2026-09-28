@@ -37,6 +37,37 @@ const ViewStoreArrow = () => (
   </svg>
 );
 
+function getFeaturedNames(slice) {
+  return (slice?.primary?.featured_product_names || [])
+    .map((item) => item.product_name?.toLowerCase().trim())
+    .filter(Boolean);
+}
+
+function productMatchesFeaturedName(productName, featuredName) {
+  const name = (productName || '').toLowerCase();
+  return name.includes(featuredName) || featuredName.includes(name);
+}
+
+function filterAndOrderByFeaturedNames(products, featuredNames, getProductName) {
+  if (!featuredNames.length) return products;
+
+  const remaining = [...products];
+  const ordered = [];
+
+  for (const featuredName of featuredNames) {
+    for (let i = 0; i < remaining.length; ) {
+      if (productMatchesFeaturedName(getProductName(remaining[i]), featuredName)) {
+        ordered.push(remaining[i]);
+        remaining.splice(i, 1);
+      } else {
+        i += 1;
+      }
+    }
+  }
+
+  return ordered;
+}
+
 export default function ProductCarousel({ slice }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState([]);
@@ -53,12 +84,12 @@ export default function ProductCarousel({ slice }) {
   
   // Check if we should show only featured products
   const showOnlyFeatured = slice.primary.show_only_featured === true;
+  const featuredNamesKey = getFeaturedNames(slice).join('|');
   
   const manualProducts = slice.items || [];
 
-
-
   useEffect(() => {
+    const featuredNames = featuredNamesKey.split('|').filter(Boolean);
     const fetchProducts = async () => {
       if (useStripeProducts) {
         try {
@@ -118,23 +149,17 @@ export default function ProductCarousel({ slice }) {
                 };
               });
             
-            // Filter to show only featured products if enabled
-            if (showOnlyFeatured && slice.primary.featured_product_names) {
-              const featuredNames = slice.primary.featured_product_names
-                .map(item => item.product_name?.toLowerCase().trim())
-                .filter(Boolean);
-              
-              if (featuredNames.length > 0) {
-                processedProducts = processedProducts.filter(product => 
-                  featuredNames.some(featuredName => 
-                    product.name.toLowerCase().includes(featuredName) ||
-                    featuredName.includes(product.name.toLowerCase())
-                  )
-                );
-              }
+            // Filter and order featured products to match the Prismic list order
+            if (showOnlyFeatured && featuredNames.length > 0) {
+              processedProducts = filterAndOrderByFeaturedNames(
+                processedProducts,
+                featuredNames,
+                (product) => product.name
+              );
             }
             
             setProducts(processedProducts);
+            setCurrentIndex(0);
           } else {
             console.error('No Stripe API key found in site settings');
             setProducts([]);
@@ -147,29 +172,23 @@ export default function ProductCarousel({ slice }) {
         // Use manual products
         let filteredManualProducts = manualProducts;
         
-        // Filter manual products if featured filtering is enabled
-        if (showOnlyFeatured && slice.primary.featured_product_names) {
-          const featuredNames = slice.primary.featured_product_names
-            .map(item => item.product_name?.toLowerCase().trim())
-            .filter(Boolean);
-          
-          if (featuredNames.length > 0) {
-            filteredManualProducts = manualProducts.filter(product => 
-              featuredNames.some(featuredName => 
-                (product.product_name || '').toLowerCase().includes(featuredName) ||
-                featuredName.includes((product.product_name || '').toLowerCase())
-              )
-            );
-          }
+        // Filter and order featured products to match the Prismic list order
+        if (showOnlyFeatured && featuredNames.length > 0) {
+          filteredManualProducts = filterAndOrderByFeaturedNames(
+            manualProducts,
+            featuredNames,
+            (product) => product.product_name
+          );
         }
         
         setProducts(filteredManualProducts);
+        setCurrentIndex(0);
       }
       setLoading(false);
     };
 
     fetchProducts();
-  }, [useStripeProducts, manualProducts, showOnlyFeatured]);
+  }, [useStripeProducts, manualProducts, showOnlyFeatured, featuredNamesKey]);
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
