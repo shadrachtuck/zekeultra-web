@@ -65,6 +65,14 @@ export default function HeaderClient({ siteName }) {
           )}
         </div>
       </header>
+      <div
+        aria-hidden="true"
+        className="py-2 px-2 invisible pointer-events-none select-none"
+      >
+        <span className="font-brigends font-bold leading-none header-logo block">
+          {siteName || 'ZEKEULTRA'}
+        </span>
+      </div>
       {isCartOpen && (
         <CartWidget onCheckout={handleCheckout} onClose={handleCloseCart} />
       )}

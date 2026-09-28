@@ -6,6 +6,7 @@ import StoreClientWrapper from '../../components/store/StoreClientWrapper';
 import Link from 'next/link';
 import { createClient } from '../../lib/prismic';
 import { createStripeInstance } from '../../lib/stripe';
+import { filterAndOrderByFeaturedNames, getFeaturedNames } from '../../lib/featuredProducts';
 
 const ArrowLeft = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -36,37 +37,6 @@ const ViewStoreArrow = () => (
     <path d="M5 12H19M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="square"/>
   </svg>
 );
-
-function getFeaturedNames(slice) {
-  return (slice?.primary?.featured_product_names || [])
-    .map((item) => item.product_name?.toLowerCase().trim())
-    .filter(Boolean);
-}
-
-function productMatchesFeaturedName(productName, featuredName) {
-  const name = (productName || '').toLowerCase();
-  return name.includes(featuredName) || featuredName.includes(name);
-}
-
-function filterAndOrderByFeaturedNames(products, featuredNames, getProductName) {
-  if (!featuredNames.length) return products;
-
-  const remaining = [...products];
-  const ordered = [];
-
-  for (const featuredName of featuredNames) {
-    for (let i = 0; i < remaining.length; ) {
-      if (productMatchesFeaturedName(getProductName(remaining[i]), featuredName)) {
-        ordered.push(remaining[i]);
-        remaining.splice(i, 1);
-      } else {
-        i += 1;
-      }
-    }
-  }
-
-  return ordered;
-}
 
 export default function ProductCarousel({ slice }) {
   const [currentIndex, setCurrentIndex] = useState(0);

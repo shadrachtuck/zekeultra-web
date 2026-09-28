@@ -1,5 +1,6 @@
 import { createClient } from '../../lib/prismic';
 import { createStripeInstance } from '../../lib/stripe';
+import { filterAndOrderByFeaturedNames, getFeaturedNamesFromHomepage } from '../../lib/featuredProducts';
 import ProductCard from '../../components/ui/ProductCard';
 import StoreClientWrapper from '../../components/store/StoreClientWrapper';
 import CloseIcon from '../../components/ui/CloseIcon';
@@ -10,7 +11,10 @@ export default async function StorePage() {
   
   try {
     // Fetch Stripe API key from Prismic settings
-    const siteSettings = await client.getSingle('site_settings');
+    const [siteSettings, homepage] = await Promise.all([
+      client.getSingle('site_settings'),
+      client.getSingle('homepage').catch(() => null),
+    ]);
     const stripeApiKey = siteSettings?.data?.stripe_private_api_key;
     
     if (!stripeApiKey) {
@@ -38,40 +42,45 @@ export default async function StorePage() {
       }
     });
     
-    const productList = Object.values(productMap)
-      .filter(product => product.prices.length > 0) // Only show products with prices
-      .map(product => {
-        // Use the first price for display
-        const price = product.prices[0];
-        
-        // Parse variant information from metadata
-        let variants = null;
-        let variantType = 'size'; // default
-        
-        if (product.metadata) {
-          // Check if product has variants defined in metadata
-          // Format: { variants: "S,M,L,XL" } or { variants: "Small,Medium,Large" }
-          if (product.metadata.variants) {
-            variants = product.metadata.variants.split(',').map(v => v.trim());
+    const featuredNames = getFeaturedNamesFromHomepage(homepage);
+    const productList = filterAndOrderByFeaturedNames(
+      Object.values(productMap)
+        .filter(product => product.prices.length > 0) // Only show products with prices
+        .map(product => {
+          // Use the first price for display
+          const price = product.prices[0];
+          
+          // Parse variant information from metadata
+          let variants = null;
+          let variantType = 'size'; // default
+          
+          if (product.metadata) {
+            // Check if product has variants defined in metadata
+            // Format: { variants: "S,M,L,XL" } or { variants: "Small,Medium,Large" }
+            if (product.metadata.variants) {
+              variants = product.metadata.variants.split(',').map(v => v.trim());
+            }
+            if (product.metadata.variant_type) {
+              variantType = product.metadata.variant_type;
+            }
           }
-          if (product.metadata.variant_type) {
-            variantType = product.metadata.variant_type;
-          }
-        }
-        
-        return {
-          id: product.id,
-          name: product.name,
-          description: product.description,
-          images: product.images,
-          price: price ? price.unit_amount : null,
-          priceId: price ? price.id : null,
-          currency: price ? price.currency : 'usd',
-          variants: variants,
-          variantType: variantType,
-          metadata: product.metadata,
-        };
-      });
+          
+          return {
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            images: product.images,
+            price: price ? price.unit_amount : null,
+            priceId: price ? price.id : null,
+            currency: price ? price.currency : 'usd',
+            variants: variants,
+            variantType: variantType,
+            metadata: product.metadata,
+          };
+        }),
+      featuredNames,
+      (product) => product.name
+    );
 
     return (
               <StoreClientWrapper>
@@ -80,7 +89,7 @@ export default async function StorePage() {
             <div className="flex justify-between items-start mb-2">
               {/* <h1 className="text-2xl font-bold">Store</h1> */}
               <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full px-2">
-                All merch
+                Featured merch
               </div>
               <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity">
                 <CloseIcon className="w-8 h-8" />
@@ -114,7 +123,7 @@ export default async function StorePage() {
           <div className="flex justify-between items-start mb-2">
             {/* <h1 className="text-2xl font-bold">Store</h1> */}
             <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full px-2">
-                All merch
+                Featured merch
               </div>
             <Link href="/" aria-label="Back to homepage" className="hover:opacity-60 transition-opacity">
               <CloseIcon className="w-8 h-8" />
@@ -134,4 +143,4 @@ export default async function StorePage() {
       </main>
     );
   }
-} 
+}
