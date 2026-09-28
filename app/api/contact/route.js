@@ -112,9 +112,6 @@ export async function POST(request) {
     const fromAddress = process.env.ELASTIC_EMAIL_FROM;
 
     if (!apiKey || !fromAddress) {
-      // #region agent log
-      fetch('http://127.0.0.1:7280/ingest/0d8b1a1c-cdf4-44b3-a95d-63b33884d273',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'dc5bc0'},body:JSON.stringify({sessionId:'dc5bc0',location:'contact/route.js:missingEnv',message:'Elastic Email env vars missing',data:{hasApiKey:!!apiKey,hasFromAddress:!!fromAddress},timestamp:Date.now(),hypothesisId:'H2',runId:'pre-fix'})}).catch(()=>{});
-      // #endregion
       console.error('Elastic Email not configured (ELASTIC_EMAIL_API_KEY or ELASTIC_EMAIL_FROM missing)');
       return NextResponse.json(
         { error: 'Email service not configured. Please contact the administrator.' },
@@ -129,10 +126,6 @@ export async function POST(request) {
     const recipientEmail = contactSettings?.data?.contact_email ||
       siteSettings?.data?.contact_email ||
       'zekecantmiss@gmail.com';
-
-    // #region agent log
-    fetch('http://127.0.0.1:7280/ingest/0d8b1a1c-cdf4-44b3-a95d-63b33884d273',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'dc5bc0'},body:JSON.stringify({sessionId:'dc5bc0',location:'contact/route.js:preSend',message:'Contact route ready to send',data:{hasApiKey:!!apiKey,apiKeyLength:apiKey?.length??0,fromHasAngleBrackets:fromAddress?.includes('<')??false,fromDomain:fromAddress?.match(/@([^>]+)/)?.[1]??fromAddress?.split('@')[1]??null,recipientSource:contactSettings?.data?.contact_email?'contact':siteSettings?.data?.contact_email?'site_settings':'fallback',recipientDomain:recipientEmail?.split('@')[1]??null},timestamp:Date.now(),hypothesisId:'H1-H2-H3-H5',runId:'pre-fix'})}).catch(()=>{});
-    // #endregion
 
     const emailContent = `
       <h2>New Contact Form Submission</h2>
@@ -161,9 +154,6 @@ export async function POST(request) {
 
   } catch (error) {
     console.error('Contact form error:', error);
-    // #region agent log
-    fetch('http://127.0.0.1:7280/ingest/0d8b1a1c-cdf4-44b3-a95d-63b33884d273',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'dc5bc0'},body:JSON.stringify({sessionId:'dc5bc0',location:'contact/route.js:catch',message:'Contact route caught error',data:{errorName:error?.name??null,errorMessage:error?.message??String(error)},timestamp:Date.now(),hypothesisId:'H5',runId:'pre-fix'})}).catch(()=>{});
-    // #endregion
 
     const elasticError = error?.message;
     if (elasticError === 'APIKey Expired') {
