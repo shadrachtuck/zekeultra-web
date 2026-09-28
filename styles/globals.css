@@ -146,7 +146,7 @@ body {
 }
 
 .page-container {
-  padding-top: 5.5rem;
+  padding-top: 2rem;
   padding-bottom: 3rem;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -154,7 +154,7 @@ body {
 
 @media (min-width: 768px) {
   .page-container {
-    padding-top: 6.5rem;
+    padding-top: 2.5rem;
     padding-bottom: 4rem;
   }
 }
